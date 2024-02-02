@@ -1,0 +1,13 @@
+{
+  "name": "testingProjectUpdate",
+  "uuid": "8f3a9c2d-12e1-4ce6-936c-17f837abd8c6",
+  "creator": {
+    "version": "3.8.0",
+    "registry": {
+      "remote": {}
+    },
+    "dependencies": {
+      "plugin-import-2x": "1.1.5"
+    }
+  }
+}
