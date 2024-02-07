@@ -1,7 +1,7 @@
 
 import { _decorator } from 'cc';
-import  ssr  from '../../namespace/SSRLoSNamespace';
-import {    ssrLoSStrategyProcessLimitedRangeWithNonFullAngle} from './SSRLoSStrategyProcessLimitedRangeWithNonFullAngle';
+import ssr from '../../namespace/SSRLoSNamespace';
+import { ssrLoSStrategyProcessLimitedRangeWithNonFullAngle } from './SSRLoSStrategyProcessLimitedRangeWithNonFullAngle';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSStrategyProcessLimitedRangeWithNonReflexAngle')

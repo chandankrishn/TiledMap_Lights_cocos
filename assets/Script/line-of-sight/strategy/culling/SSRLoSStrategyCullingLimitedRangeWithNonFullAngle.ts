@@ -33,8 +33,8 @@ THE SOFTWARE.
 * @abstract
 */
 import { _decorator } from 'cc';
-import  ssr  from '../../namespace/SSRLoSNamespace';
-import {   ssrLoSStrategyCullingLimitedRange } from './SSRLoSStrategyCullingLimitedRange';
+import ssr from '../../namespace/SSRLoSNamespace';
+import { ssrLoSStrategyCullingLimitedRange } from './SSRLoSStrategyCullingLimitedRange';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSStrategyCullingLimitedRangeWithNonFullAngle')
@@ -42,24 +42,24 @@ export class ssrLoSStrategyCullingLimitedRangeWithNonFullAngle extends ssrLoSStr
     // @property
     // public "extends" = 'CullingLimitedRange';
 
-    _preProcess () {
-            if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) { 
-                var obstacle = this._losComponentCore.getBoundaryObstacle(); 
-                obstacle.clearAnglePointArray(); 
-                obstacle.clearPotentialBlockingEdgeArray(); 
-                var sightBoundary = this._losComponentCore.getSightBoundary(); 
-                var edges = sightBoundary.getEdges(); 
-                var sEdge = edges[0]; 
-                var sHashCode = ssr.LoS.Helper.pointToHashCode(sEdge); 
-                var anglePointStart = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint); 
-                anglePointStart.init(sEdge, [0], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY); 
-                obstacle.addAnglePoint(sHashCode, anglePointStart); 
-                var eEdge = edges[1]; 
-                var eHashCode = ssr.LoS.Helper.pointToHashCode(eEdge); 
-                var anglePointEnd = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint); 
-                anglePointEnd.init(eEdge, [0], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY); 
-                obstacle.addAnglePoint(eHashCode, anglePointEnd); 
-            } 
+    _preProcess() {
+        if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) {
+            let obstacle = this._losComponentCore.getBoundaryObstacle();
+            obstacle.clearAnglePointArray();
+            obstacle.clearPotentialBlockingEdgeArray();
+            let sightBoundary = this._losComponentCore.getSightBoundary();
+            let edges = sightBoundary.getEdges();
+            let sEdge = edges[0];
+            let sHashCode = ssr.LoS.Helper.pointToHashCode(sEdge);
+            let anglePointStart = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+            anglePointStart.init(sEdge, [0], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY);
+            obstacle.addAnglePoint(sHashCode, anglePointStart);
+            let eEdge = edges[1];
+            let eHashCode = ssr.LoS.Helper.pointToHashCode(eEdge);
+            let anglePointEnd = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+            anglePointEnd.init(eEdge, [0], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY);
+            obstacle.addAnglePoint(eHashCode, anglePointEnd);
+        }
     }
 
 }
@@ -112,20 +112,20 @@ ssr.LoS.Strategy.Culling.LimitedRangeWithNonFullAngle = ssrLoSStrategyCullingLim
 //     _preProcess:function() {
 //         // use the boundaryNode to generate a implicit obstacle for boundary
 //         if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) {
-//             var obstacle = this._losComponentCore.getBoundaryObstacle();
+//             let obstacle = this._losComponentCore.getBoundaryObstacle();
 //             obstacle.clearAnglePointArray();
 //             obstacle.clearPotentialBlockingEdgeArray();
 //             // process the two edges of the sector
-//             var sightBoundary = this._losComponentCore.getSightBoundary();
-//             var edges = sightBoundary.getEdges();
-//             var sEdge = edges[0];
-//             var sHashCode = ssr.LoS.Helper.pointToHashCode(sEdge);
-//             var anglePointStart = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+//             let sightBoundary = this._losComponentCore.getSightBoundary();
+//             let edges = sightBoundary.getEdges();
+//             let sEdge = edges[0];
+//             let sHashCode = ssr.LoS.Helper.pointToHashCode(sEdge);
+//             let anglePointStart = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
 //             anglePointStart.init(sEdge, [0], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY);
 //             obstacle.addAnglePoint(sHashCode, anglePointStart);
-//             var eEdge = edges[1];
-//             var eHashCode = ssr.LoS.Helper.pointToHashCode(eEdge);
-//             var anglePointEnd = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+//             let eEdge = edges[1];
+//             let eHashCode = ssr.LoS.Helper.pointToHashCode(eEdge);
+//             let anglePointEnd = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
 //             anglePointEnd.init(eEdge, [0], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY);
 //             obstacle.addAnglePoint(eHashCode, anglePointEnd);
 //         }

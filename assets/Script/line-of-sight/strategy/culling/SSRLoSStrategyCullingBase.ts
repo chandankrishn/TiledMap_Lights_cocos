@@ -69,7 +69,7 @@ THE SOFTWARE.
 * @abstract
 */
 import { _decorator } from 'cc';
-import  ssr  from '../../namespace/SSRLoSNamespace';
+import ssr from '../../namespace/SSRLoSNamespace';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSStrategyCullingBase')
@@ -78,68 +78,68 @@ export class ssrLoSStrategyCullingBase {
     // public "extends" = null;
     protected _losComponentCore: any;
 
-    constructor () {
-            this._losComponentCore = arguments[0]; 
+    constructor() {
+        this._losComponentCore = arguments[0];
     }
 
-    process () {
-            this._preProcess(); 
-            var obstacles = this._losComponentCore.getObstacles(); 
-            for (var i = 0, l = obstacles.length; i < l; i ++) { 
-                var obstacle = obstacles[i]; 
-                if (!obstacle.isDirty()) { 
-                    continue; 
-                } 
-                else { 
-                    obstacle.clearAnglePointArray(); 
-                    obstacle.clearPotentialBlockingEdgeArray(); 
-                } 
-                var obstacleEdgeArray = obstacle.getObstacleEdgeArray(); 
-                for (var j = 0, ll = obstacleEdgeArray.length; j < ll; j ++) { 
-                    var edge = obstacleEdgeArray[j]; 
-                    var s = edge.getStartPoint(); 
-                    var e = edge.getEndPoint(); 
-                    var sHashCode = ssr.LoS.Helper.pointToHashCode(s); 
-                    var eHashCode = ssr.LoS.Helper.pointToHashCode(e); 
-                    var prevEdgeS = null; 
-                    var nextEdgeS = null; 
-                    var prevEdgeE = null; 
-                    var nextEdgeE = null; 
-                    if (edge.getType() == ssr.LoS.Constant.EDGE_TYPE.POLYGON) { 
-                        prevEdgeS = (j == 0 ? obstacleEdgeArray[ll - 1] : obstacleEdgeArray[j - 1]); 
-                        nextEdgeS = edge; 
-                        prevEdgeE = edge; 
-                        nextEdgeE = (j == ll - 1 ? obstacleEdgeArray[0] : obstacleEdgeArray[j + 1]); 
-                    } 
-                    else if (edge.getType() == ssr.LoS.Constant.EDGE_TYPE.POLYLINE) { 
-                        prevEdgeS = (j == 0 ? null : obstacleEdgeArray[j - 1]); 
-                        nextEdgeS = edge; 
-                        prevEdgeE = edge; 
-                        nextEdgeE = (j == ll - 1 ? null : obstacleEdgeArray[j + 1]); 
-                    } 
-                    this._processOneEdge( 
-                        obstacle,  
-                        sHashCode,  
-                        eHashCode,  
-                        edge,  
-                        prevEdgeS,  
-                        nextEdgeS,  
-                        prevEdgeE,  
-                        nextEdgeE 
-                    ); 
-                } 
-                obstacle.setDirty(false); 
-            } 
-            this._postProcess(); 
+    process() {
+        this._preProcess();
+        let obstacles = this._losComponentCore.getObstacles();
+        for (let i = 0, l = obstacles.length; i < l; i++) {
+            let obstacle = obstacles[i];
+            if (!obstacle.isDirty()) {
+                continue;
+            }
+            else {
+                obstacle.clearAnglePointArray();
+                obstacle.clearPotentialBlockingEdgeArray();
+            }
+            let obstacleEdgeArray = obstacle.getObstacleEdgeArray();
+            for (let j = 0, ll = obstacleEdgeArray.length; j < ll; j++) {
+                let edge = obstacleEdgeArray[j];
+                let s = edge.getStartPoint();
+                let e = edge.getEndPoint();
+                let sHashCode = ssr.LoS.Helper.pointToHashCode(s);
+                let eHashCode = ssr.LoS.Helper.pointToHashCode(e);
+                let prevEdgeS = null;
+                let nextEdgeS = null;
+                let prevEdgeE = null;
+                let nextEdgeE = null;
+                if (edge.getType() == ssr.LoS.Constant.EDGE_TYPE.POLYGON) {
+                    prevEdgeS = (j == 0 ? obstacleEdgeArray[ll - 1] : obstacleEdgeArray[j - 1]);
+                    nextEdgeS = edge;
+                    prevEdgeE = edge;
+                    nextEdgeE = (j == ll - 1 ? obstacleEdgeArray[0] : obstacleEdgeArray[j + 1]);
+                }
+                else if (edge.getType() == ssr.LoS.Constant.EDGE_TYPE.POLYLINE) {
+                    prevEdgeS = (j == 0 ? null : obstacleEdgeArray[j - 1]);
+                    nextEdgeS = edge;
+                    prevEdgeE = edge;
+                    nextEdgeE = (j == ll - 1 ? null : obstacleEdgeArray[j + 1]);
+                }
+                this._processOneEdge(
+                    obstacle,
+                    sHashCode,
+                    eHashCode,
+                    edge,
+                    prevEdgeS,
+                    nextEdgeS,
+                    prevEdgeE,
+                    nextEdgeE
+                );
+            }
+            obstacle.setDirty(false);
+        }
+        this._postProcess();
     }
 
-    _preProcess () {
+    _preProcess() {
     }
 
-    _processOneEdge (obstacle: any, sHashCode: any, eHashCode: any, edge: any, prevEdgeS: any, nextEdgeS: any, prevEdgeE: any, nextEdgeE: any) {
+    _processOneEdge(obstacle: any, sHashCode: any, eHashCode: any, edge: any, prevEdgeS: any, nextEdgeS: any, prevEdgeE: any, nextEdgeE: any) {
     }
 
-    _postProcess () {
+    _postProcess() {
     }
 
 }
@@ -208,9 +208,9 @@ ssr.LoS.Strategy.Culling.Base = ssrLoSStrategyCullingBase;
 //         // pre process first if needed
 //         this._preProcess();
 //         // start the main loop 
-//         var obstacles = this._losComponentCore.getObstacles();
-//         for (var i = 0, l = obstacles.length; i < l; i ++) {
-//             var obstacle = obstacles[i];
+//         let obstacles = this._losComponentCore.getObstacles();
+//         for (let i = 0, l = obstacles.length; i < l; i ++) {
+//             let obstacle = obstacles[i];
 //             if (!obstacle.isDirty()) {
 //                 // pass if not dirty since we do not need to redo the culling
 //                 continue;
@@ -221,18 +221,18 @@ ssr.LoS.Strategy.Culling.Base = ssrLoSStrategyCullingBase;
 //                 obstacle.clearPotentialBlockingEdgeArray();
 //             }
 //             // start to process all the edges of each obstacle
-//             var obstacleEdgeArray = obstacle.getObstacleEdgeArray();
-//             for (var j = 0, ll = obstacleEdgeArray.length; j < ll; j ++) {
-//                 var edge = obstacleEdgeArray[j];
-//                 var s = edge.getStartPoint();
-//                 var e = edge.getEndPoint();
-//                 var sHashCode = ssr.LoS.Helper.pointToHashCode(s);
-//                 var eHashCode = ssr.LoS.Helper.pointToHashCode(e);
+//             let obstacleEdgeArray = obstacle.getObstacleEdgeArray();
+//             for (let j = 0, ll = obstacleEdgeArray.length; j < ll; j ++) {
+//                 let edge = obstacleEdgeArray[j];
+//                 let s = edge.getStartPoint();
+//                 let e = edge.getEndPoint();
+//                 let sHashCode = ssr.LoS.Helper.pointToHashCode(s);
+//                 let eHashCode = ssr.LoS.Helper.pointToHashCode(e);
 //                 
-//                 var prevEdgeS = null;
-//                 var nextEdgeS = null;
-//                 var prevEdgeE = null;
-//                 var nextEdgeE = null;
+//                 let prevEdgeS = null;
+//                 let nextEdgeS = null;
+//                 let prevEdgeE = null;
+//                 let nextEdgeE = null;
 //                 if (edge.getType() == ssr.LoS.Constant.EDGE_TYPE.POLYGON) {
 //                     prevEdgeS = (j == 0 ? obstacleEdgeArray[ll - 1] : obstacleEdgeArray[j - 1]);
 //                     nextEdgeS = edge;

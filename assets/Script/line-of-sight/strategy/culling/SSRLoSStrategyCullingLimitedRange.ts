@@ -34,22 +34,22 @@ THE SOFTWARE.
 * @author supersuraccoon <supersuraccoon@gmail.com>
 */
 import { _decorator } from 'cc';
-import  ssr  from '../../namespace/SSRLoSNamespace';
-import  {ssrLoSStrategyCullingBase}  from './SSRLoSStrategyCullingBase';
+import ssr from '../../namespace/SSRLoSNamespace';
+import { ssrLoSStrategyCullingBase } from './SSRLoSStrategyCullingBase';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSStrategyCullingLimitedRange')
-export class ssrLoSStrategyCullingLimitedRange  extends ssrLoSStrategyCullingBase{
+export class ssrLoSStrategyCullingLimitedRange extends ssrLoSStrategyCullingBase {
     // @property
     // public "extends" = 'CullingBase';
 
-    _preProcess () {
-            if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) { 
-                var obstacle = this._losComponentCore.getBoundaryObstacle(); 
-                obstacle.clearObstacleEdgeArray(); 
-                obstacle.clearAnglePointArray(); 
-                obstacle.clearPotentialBlockingEdgeArray(); 
-            } 
+    _preProcess() {
+        if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) {
+            let obstacle = this._losComponentCore.getBoundaryObstacle();
+            obstacle.clearObstacleEdgeArray();
+            obstacle.clearAnglePointArray();
+            obstacle.clearPotentialBlockingEdgeArray();
+        }
     }
 
 }
@@ -104,7 +104,7 @@ ssr.LoS.Strategy.Culling.LimitedRange = ssrLoSStrategyCullingLimitedRange;
 //     _preProcess:function() {
 //         // use the boundaryNode to generate a implicit obstacle for boundary
 //         if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) {
-//             var obstacle = this._losComponentCore.getBoundaryObstacle();
+//             let obstacle = this._losComponentCore.getBoundaryObstacle();
 //             obstacle.clearObstacleEdgeArray();
 //             obstacle.clearAnglePointArray();
 //             obstacle.clearPotentialBlockingEdgeArray();

@@ -151,254 +151,254 @@ Test Case
 * @return {Array.<ssr.LoS.Data.Edge>} The edge array.
 */
 import { Vec2, _decorator } from 'cc';
-import  ssr  from '../../namespace/SSRLoSNamespace';
+import ssr from '../../namespace/SSRLoSNamespace';
 // import { CullingBase } from './SSRLoSStrategyCullingBase';
 import { ssrLoSStrategyCullingBase } from './SSRLoSStrategyCullingBase';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSStrategyCullingUnlimitedRange')
-export class ssrLoSStrategyCullingUnlimitedRange extends  ssrLoSStrategyCullingBase {
+export class ssrLoSStrategyCullingUnlimitedRange extends ssrLoSStrategyCullingBase {
     // @property
     // public "extends" = 'CullingBase';
 
-    _preProcess () {
-            if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) { 
-                var obstacle = this._losComponentCore.getBoundaryObstacle(); 
-                obstacle.clearObstacleEdgeArray(); 
-                obstacle.clearAnglePointArray(); 
-                obstacle.clearPotentialBlockingEdgeArray(); 
-                var edgeArray = this._extractSightBoundaryEdges(); 
-                for (var i = 0, l = edgeArray.length; i < l; i ++) { 
-                    var edge = edgeArray[i]; 
-                    var startPoint = edge.getStartPoint(); 
-                    var prevEdgeS = (i == 0 ? edgeArray[l - 1] : edgeArray[i - 1]); 
-                    var nextEdgeS = edge; 
-                    var sHashCode = ssr.LoS.Helper.pointToHashCode(startPoint); 
-                    var anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint); 
-                    anglePoint.init(startPoint, [prevEdgeS.getEdgeID(), nextEdgeS.getEdgeID()], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY); 
-                    obstacle.addObstacleEdge(edge); 
-                    obstacle.addAnglePoint(sHashCode, anglePoint); 
-                    obstacle.addPotentialBlockingEdge(edge); 
-                } 
-            } 
+    _preProcess() {
+        if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) {
+            let obstacle = this._losComponentCore.getBoundaryObstacle();
+            obstacle.clearObstacleEdgeArray();
+            obstacle.clearAnglePointArray();
+            obstacle.clearPotentialBlockingEdgeArray();
+            let edgeArray = this._extractSightBoundaryEdges();
+            for (let i = 0, l = edgeArray.length; i < l; i++) {
+                let edge = edgeArray[i];
+                let startPoint = edge.getStartPoint();
+                let prevEdgeS = (i == 0 ? edgeArray[l - 1] : edgeArray[i - 1]);
+                let nextEdgeS = edge;
+                let sHashCode = ssr.LoS.Helper.pointToHashCode(startPoint);
+                let anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+                anglePoint.init(startPoint, [prevEdgeS.getEdgeID(), nextEdgeS.getEdgeID()], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY);
+                obstacle.addObstacleEdge(edge);
+                obstacle.addAnglePoint(sHashCode, anglePoint);
+                obstacle.addPotentialBlockingEdge(edge);
+            }
+        }
     }
 
-    _processOneEdge (obstacle: any, sHashCode: any, eHashCode: any, edge: any, prevEdgeS: any, nextEdgeS: any, prevEdgeE: any, nextEdgeE: any) {
-            var rectangle = this._losComponentCore.getSightBoundary().getRectangle(); 
-            var sInclusionTestResult = ssr.LoS.Helper.pointRetangleInclusionTest(edge.getStartPoint(), rectangle); 
-            var eInclusionTestResult = ssr.LoS.Helper.pointRetangleInclusionTest(edge.getEndPoint(), rectangle); 
-            if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN && 
-                eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN) { 
-                obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS); 
-                obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE); 
-                obstacle.addPotentialBlockingEdge(edge); 
-            } 
-            else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON && 
-                     eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON) { 
-                if (ssr.LoS.Helper.segmentOnSameRectangleEdgeTest(edge.getStartPoint(), edge.getEndPoint(), rectangle)) { 
-                } 
-                else { 
-                    obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS); 
-                    obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE); 
-                    obstacle.addPotentialBlockingEdge(edge); 
-                } 
-            } 
-            else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT && 
-                     eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT) { 
-                if (ssr.LoS.Helper.segmentOnSameRectangleEdgeTest(edge.getStartPoint(), edge.getEndPoint(), rectangle)) { 
-                } 
-                else { 
-                    var edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest( 
-                        edge.getStartPoint(),  
-                        edge.getEndPoint(),  
-                        this._losComponentCore.getSightBoundary().getTopLeft(),  
-                        this._losComponentCore.getSightBoundary().getTopRight(),  
-                        this._losComponentCore.getSightBoundary().getBottomRight(),  
-                        this._losComponentCore.getSightBoundary().getBottomLeft() 
-                    ); 
-                    if (edgeRectIntersectionResult) { 
-                        obstacle.addPotentialBlockingEdge(edge); 
-                        this._narrowTest(obstacle, edge, 2); 
-                    } 
-                    else { 
-                    } 
-                } 
-            } 
-            else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN && 
-                     eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT) { 
-                obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS); 
-                obstacle.addPotentialBlockingEdge(edge); 
-                this._narrowTest(obstacle, edge, 1); 
-            } 
-            else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT && 
-                     eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN) { 
-                obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE); 
-                obstacle.addPotentialBlockingEdge(edge); 
-                this._narrowTest(obstacle, edge, 1); 
-            } 
-            else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN && 
-                     eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON) { 
-                obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS); 
-                obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE); 
-                obstacle.addPotentialBlockingEdge(edge); 
-            } 
-            else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON && 
-                     eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN) { 
-                obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS); 
-                obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE); 
-                obstacle.addPotentialBlockingEdge(edge); 
-            } 
-            else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT && 
-                     eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON) { 
-                if (ssr.LoS.Helper.segmentOnSameRectangleEdgeTest(edge.getStartPoint(), edge.getEndPoint(), rectangle)) { 
-                } 
-                else { 
-                    var edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest( 
-                        edge.getStartPoint(),  
-                        edge.getEndPoint(),  
-                        this._losComponentCore.getSightBoundary().getTopLeft(),  
-                        this._losComponentCore.getSightBoundary().getTopRight(),  
-                        this._losComponentCore.getSightBoundary().getBottomRight(),  
-                        this._losComponentCore.getSightBoundary().getBottomLeft() 
-                    ); 
-                    if (edgeRectIntersectionResult) { 
-                        obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE); 
-                        obstacle.addPotentialBlockingEdge(edge); 
-                        var pointOnBoundaryEdgeArray = this._getPointOnBoundaryEdges(edge.getEndPoint()); 
-                        this._narrowTest(obstacle, edge, 1, pointOnBoundaryEdgeArray); 
-                    } 
-                    else { 
-                    } 
-                } 
-            } 
-            else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON && 
-                     eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT) { 
-                if (ssr.LoS.Helper.segmentOnSameRectangleEdgeTest(edge.getStartPoint(), edge.getEndPoint(), rectangle)) { 
-                } 
-                else { 
-                    var edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest( 
-                        edge.getStartPoint(),  
-                        edge.getEndPoint(),  
-                        this._losComponentCore.getSightBoundary().getTopLeft(),  
-                        this._losComponentCore.getSightBoundary().getTopRight(),  
-                        this._losComponentCore.getSightBoundary().getBottomRight(),  
-                        this._losComponentCore.getSightBoundary().getBottomLeft() 
-                    ); 
-                    if (edgeRectIntersectionResult) { 
-                        obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS); 
-                        obstacle.addPotentialBlockingEdge(edge); 
-                        var pointOnBoundaryEdgeArray = this._getPointOnBoundaryEdges(edge.getStartPoint()); 
-                        this._narrowTest(obstacle, edge, 1, pointOnBoundaryEdgeArray); 
-                    } 
-                    else { 
-                    } 
-                } 
-            } 
-            else { 
-                console.error("ssr.LoS.Strategy.Culling.UnlimitedRange._processOneEdge something weird happened !!!"); 
-            } 
+    _processOneEdge(obstacle: any, sHashCode: any, eHashCode: any, edge: any, prevEdgeS: any, nextEdgeS: any, prevEdgeE: any, nextEdgeE: any) {
+        let rectangle = this._losComponentCore.getSightBoundary().getRectangle();
+        let sInclusionTestResult = ssr.LoS.Helper.pointRetangleInclusionTest(edge.getStartPoint(), rectangle);
+        let eInclusionTestResult = ssr.LoS.Helper.pointRetangleInclusionTest(edge.getEndPoint(), rectangle);
+        if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN) {
+            obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS);
+            obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE);
+            obstacle.addPotentialBlockingEdge(edge);
+        }
+        else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON) {
+            if (ssr.LoS.Helper.segmentOnSameRectangleEdgeTest(edge.getStartPoint(), edge.getEndPoint(), rectangle)) {
+            }
+            else {
+                obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS);
+                obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE);
+                obstacle.addPotentialBlockingEdge(edge);
+            }
+        }
+        else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT) {
+            if (ssr.LoS.Helper.segmentOnSameRectangleEdgeTest(edge.getStartPoint(), edge.getEndPoint(), rectangle)) {
+            }
+            else {
+                let edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
+                    edge.getStartPoint(),
+                    edge.getEndPoint(),
+                    this._losComponentCore.getSightBoundary().getTopLeft(),
+                    this._losComponentCore.getSightBoundary().getTopRight(),
+                    this._losComponentCore.getSightBoundary().getBottomRight(),
+                    this._losComponentCore.getSightBoundary().getBottomLeft()
+                );
+                if (edgeRectIntersectionResult) {
+                    obstacle.addPotentialBlockingEdge(edge);
+                    this._narrowTest(obstacle, edge, 2);
+                }
+                else {
+                }
+            }
+        }
+        else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT) {
+            obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS);
+            obstacle.addPotentialBlockingEdge(edge);
+            this._narrowTest(obstacle, edge, 1);
+        }
+        else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN) {
+            obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE);
+            obstacle.addPotentialBlockingEdge(edge);
+            this._narrowTest(obstacle, edge, 1);
+        }
+        else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON) {
+            obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS);
+            obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE);
+            obstacle.addPotentialBlockingEdge(edge);
+        }
+        else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN) {
+            obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS);
+            obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE);
+            obstacle.addPotentialBlockingEdge(edge);
+        }
+        else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON) {
+            if (ssr.LoS.Helper.segmentOnSameRectangleEdgeTest(edge.getStartPoint(), edge.getEndPoint(), rectangle)) {
+            }
+            else {
+                let edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
+                    edge.getStartPoint(),
+                    edge.getEndPoint(),
+                    this._losComponentCore.getSightBoundary().getTopLeft(),
+                    this._losComponentCore.getSightBoundary().getTopRight(),
+                    this._losComponentCore.getSightBoundary().getBottomRight(),
+                    this._losComponentCore.getSightBoundary().getBottomLeft()
+                );
+                if (edgeRectIntersectionResult) {
+                    obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE);
+                    obstacle.addPotentialBlockingEdge(edge);
+                    let pointOnBoundaryEdgeArray = this._getPointOnBoundaryEdges(edge.getEndPoint());
+                    this._narrowTest(obstacle, edge, 1, pointOnBoundaryEdgeArray);
+                }
+                else {
+                }
+            }
+        }
+        else if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.ON &&
+            eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.OUT) {
+            if (ssr.LoS.Helper.segmentOnSameRectangleEdgeTest(edge.getStartPoint(), edge.getEndPoint(), rectangle)) {
+            }
+            else {
+                let edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
+                    edge.getStartPoint(),
+                    edge.getEndPoint(),
+                    this._losComponentCore.getSightBoundary().getTopLeft(),
+                    this._losComponentCore.getSightBoundary().getTopRight(),
+                    this._losComponentCore.getSightBoundary().getBottomRight(),
+                    this._losComponentCore.getSightBoundary().getBottomLeft()
+                );
+                if (edgeRectIntersectionResult) {
+                    obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS);
+                    obstacle.addPotentialBlockingEdge(edge);
+                    let pointOnBoundaryEdgeArray = this._getPointOnBoundaryEdges(edge.getStartPoint());
+                    this._narrowTest(obstacle, edge, 1, pointOnBoundaryEdgeArray);
+                }
+                else {
+                }
+            }
+        }
+        else {
+            console.error("ssr.LoS.Strategy.Culling.UnlimitedRange._processOneEdge something weird happened !!!");
+        }
     }
 
-    _getPointOnBoundaryEdges (point: any) {
-            var pointOnBoundaryEdgeArray = []; 
-            if (point.y == this._losComponentCore.getSightBoundary().getTopRight().y) { 
-                pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.TOP); 
-            } 
-            if (point.x == this._losComponentCore.getSightBoundary().getTopRight().x) { 
-                pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.RIGHT); 
-            } 
-            if (point.y == this._losComponentCore.getSightBoundary().getBottomRight().y) { 
-                pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.BUTTOM); 
-            } 
-            if (point.x == this._losComponentCore.getSightBoundary().getBottomLeft().x) { 
-                pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.LEFT); 
-            } 
-            return pointOnBoundaryEdgeArray; 
+    _getPointOnBoundaryEdges(point: any) {
+        let pointOnBoundaryEdgeArray = [];
+        if (point.y == this._losComponentCore.getSightBoundary().getTopRight().y) {
+            pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.TOP);
+        }
+        if (point.x == this._losComponentCore.getSightBoundary().getTopRight().x) {
+            pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.RIGHT);
+        }
+        if (point.y == this._losComponentCore.getSightBoundary().getBottomRight().y) {
+            pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.BUTTOM);
+        }
+        if (point.x == this._losComponentCore.getSightBoundary().getBottomLeft().x) {
+            pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.LEFT);
+        }
+        return pointOnBoundaryEdgeArray;
     }
 
-    _getSightBoundaryEdge (edgeType: any) {
-            if (edgeType == ssr.LoS.Constant.BOUNDARY_EDGE.TOP) { 
-                return this._losComponentCore.getSightBoundary().getTopEdge(); 
-            } 
-            else if (edgeType == ssr.LoS.Constant.BOUNDARY_EDGE.RIGHT) { 
-                return this._losComponentCore.getSightBoundary().getRightEdge(); 
-            } 
-            else if (edgeType == ssr.LoS.Constant.BOUNDARY_EDGE.BUTTOM) { 
-                return this._losComponentCore.getSightBoundary().getBottomEdge(); 
-            } 
-            else { 
-                return this._losComponentCore.getSightBoundary().getLeftEdge(); 
-            } 
+    _getSightBoundaryEdge(edgeType: any) {
+        if (edgeType == ssr.LoS.Constant.BOUNDARY_EDGE.TOP) {
+            return this._losComponentCore.getSightBoundary().getTopEdge();
+        }
+        else if (edgeType == ssr.LoS.Constant.BOUNDARY_EDGE.RIGHT) {
+            return this._losComponentCore.getSightBoundary().getRightEdge();
+        }
+        else if (edgeType == ssr.LoS.Constant.BOUNDARY_EDGE.BUTTOM) {
+            return this._losComponentCore.getSightBoundary().getBottomEdge();
+        }
+        else {
+            return this._losComponentCore.getSightBoundary().getLeftEdge();
+        }
     }
 
-    _narrowTest (obstacle: any, edge: any, expectIntersectionCount: any, skipEdgeTypeArray?: any) {
-            var s = edge.getStartPoint(); 
-            var e = edge.getEndPoint(); 
-            var checkSightBoundaryEdgeArray = [ 
-                ssr.LoS.Constant.BOUNDARY_EDGE.TOP, 
-                ssr.LoS.Constant.BOUNDARY_EDGE.RIGHT, 
-                ssr.LoS.Constant.BOUNDARY_EDGE.BUTTOM, 
-                ssr.LoS.Constant.BOUNDARY_EDGE.LEFT 
-            ]; 
-            for (var i = 0; i < checkSightBoundaryEdgeArray.length; i ++) { 
-                var edgeType = checkSightBoundaryEdgeArray[i]; 
-                if (skipEdgeTypeArray && ssr.LoS.Helper.isElementInArray(edgeType, skipEdgeTypeArray)) { 
-                    continue; 
-                } 
-                var sightBoundaryEdge = this._getSightBoundaryEdge(edgeType); 
-                var intersection = new Vec2(0, 0); 
-                var intersectionHashCode = ""; 
-                var intersectionCount = 0; 
-                if (ssr.LoS.Helper.segmentSegmentTest(s, e, sightBoundaryEdge[0], sightBoundaryEdge[1])) { 
-                    var intersection = ssr.LoS.Helper.segmentSegmentIntersect(s, e, sightBoundaryEdge[0], sightBoundaryEdge[1]); 
-                    if (intersection) { 
-                        intersectionCount += 1; 
-                        intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersection); 
-                        obstacle.addBoundaryAnglePoint(intersectionHashCode, intersection, edge); 
-                    } 
-                    if (intersectionCount >= expectIntersectionCount) { 
-                        break; 
-                    } 
-                } 
-            } 
+    _narrowTest(obstacle: any, edge: any, expectIntersectionCount: any, skipEdgeTypeArray?: any) {
+        let s = edge.getStartPoint();
+        let e = edge.getEndPoint();
+        let checkSightBoundaryEdgeArray = [
+            ssr.LoS.Constant.BOUNDARY_EDGE.TOP,
+            ssr.LoS.Constant.BOUNDARY_EDGE.RIGHT,
+            ssr.LoS.Constant.BOUNDARY_EDGE.BUTTOM,
+            ssr.LoS.Constant.BOUNDARY_EDGE.LEFT
+        ];
+        for (let i = 0; i < checkSightBoundaryEdgeArray.length; i++) {
+            let edgeType = checkSightBoundaryEdgeArray[i];
+            if (skipEdgeTypeArray && ssr.LoS.Helper.isElementInArray(edgeType, skipEdgeTypeArray)) {
+                continue;
+            }
+            let sightBoundaryEdge = this._getSightBoundaryEdge(edgeType);
+            let intersection = new Vec2(0, 0);
+            let intersectionHashCode = "";
+            let intersectionCount = 0;
+            if (ssr.LoS.Helper.segmentSegmentTest(s, e, sightBoundaryEdge[0], sightBoundaryEdge[1])) {
+                let intersection = ssr.LoS.Helper.segmentSegmentIntersect(s, e, sightBoundaryEdge[0], sightBoundaryEdge[1]);
+                if (intersection) {
+                    intersectionCount += 1;
+                    intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersection);
+                    obstacle.addBoundaryAnglePoint(intersectionHashCode, intersection, edge);
+                }
+                if (intersectionCount >= expectIntersectionCount) {
+                    break;
+                }
+            }
+        }
     }
 
-    _extractSightBoundaryEdges () {
-            var sightBoundary = this._losComponentCore.getSightBoundary(); 
-            var edgeArray = []; 
-            var edgeTop = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge); 
-            edgeTop.init( 
-                sightBoundary.getTopLeft(),  
-                sightBoundary.getTopRight(),  
-                -1, 
-                ssr.LoS.Constant.EDGE_TYPE.POLYGON 
-            ); 
-            edgeArray.push(edgeTop); 
-            var edgeRight = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge); 
-            edgeRight.init( 
-                sightBoundary.getTopRight(),  
-                sightBoundary.getBottomRight(),  
-                -2, 
-                ssr.LoS.Constant.EDGE_TYPE.POLYGON 
-            ); 
-            edgeArray.push(edgeRight); 
-            var edgeBottom = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge); 
-            edgeBottom.init( 
-                sightBoundary.getBottomRight(),  
-                sightBoundary.getBottomLeft(),  
-                -3, 
-                ssr.LoS.Constant.EDGE_TYPE.POLYGON 
-            ); 
-            edgeArray.push(edgeBottom); 
-            var edgeLeft = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge); 
-            edgeLeft.init( 
-                sightBoundary.getBottomLeft(),  
-                sightBoundary.getTopLeft(), 
-                -4, 
-                ssr.LoS.Constant.EDGE_TYPE.POLYGON 
-            ); 
-            edgeArray.push(edgeLeft); 
-            return edgeArray; 
+    _extractSightBoundaryEdges() {
+        let sightBoundary = this._losComponentCore.getSightBoundary();
+        let edgeArray = [];
+        let edgeTop = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+        edgeTop.init(
+            sightBoundary.getTopLeft(),
+            sightBoundary.getTopRight(),
+            -1,
+            ssr.LoS.Constant.EDGE_TYPE.POLYGON
+        );
+        edgeArray.push(edgeTop);
+        let edgeRight = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+        edgeRight.init(
+            sightBoundary.getTopRight(),
+            sightBoundary.getBottomRight(),
+            -2,
+            ssr.LoS.Constant.EDGE_TYPE.POLYGON
+        );
+        edgeArray.push(edgeRight);
+        let edgeBottom = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+        edgeBottom.init(
+            sightBoundary.getBottomRight(),
+            sightBoundary.getBottomLeft(),
+            -3,
+            ssr.LoS.Constant.EDGE_TYPE.POLYGON
+        );
+        edgeArray.push(edgeBottom);
+        let edgeLeft = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+        edgeLeft.init(
+            sightBoundary.getBottomLeft(),
+            sightBoundary.getTopLeft(),
+            -4,
+            ssr.LoS.Constant.EDGE_TYPE.POLYGON
+        );
+        edgeArray.push(edgeLeft);
+        return edgeArray;
     }
 
 }
@@ -452,19 +452,19 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //     _preProcess:function() {
 //         // use the boundaryNode to generate a implicit obstacle for boundary
 //         if (this._losComponentCore.getDirtyFlag(ssr.LoS.Constant.DIRTY_FLAGS.BOUNDARY)) {
-//             var obstacle = this._losComponentCore.getBoundaryObstacle();
+//             let obstacle = this._losComponentCore.getBoundaryObstacle();
 //             obstacle.clearObstacleEdgeArray();
 //             obstacle.clearAnglePointArray();
 //             obstacle.clearPotentialBlockingEdgeArray();
 //             // generate angle points and potential blocking edges directly
-//             var edgeArray = this._extractSightBoundaryEdges();
-//             for (var i = 0, l = edgeArray.length; i < l; i ++) {
-//                 var edge = edgeArray[i];
-//                 var startPoint = edge.getStartPoint();
-//                 var prevEdgeS = (i == 0 ? edgeArray[l - 1] : edgeArray[i - 1]);
-//                 var nextEdgeS = edge;
-//                 var sHashCode = ssr.LoS.Helper.pointToHashCode(startPoint);
-//                 var anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+//             let edgeArray = this._extractSightBoundaryEdges();
+//             for (let i = 0, l = edgeArray.length; i < l; i ++) {
+//                 let edge = edgeArray[i];
+//                 let startPoint = edge.getStartPoint();
+//                 let prevEdgeS = (i == 0 ? edgeArray[l - 1] : edgeArray[i - 1]);
+//                 let nextEdgeS = edge;
+//                 let sHashCode = ssr.LoS.Helper.pointToHashCode(startPoint);
+//                 let anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
 //                 anglePoint.init(startPoint, [prevEdgeS.getEdgeID(), nextEdgeS.getEdgeID()], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY);
 //                 obstacle.addObstacleEdge(edge);
 //                 obstacle.addAnglePoint(sHashCode, anglePoint);
@@ -562,9 +562,9 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //      * @param {ssr.LoS.Data.Edge|null} nextEdgeE The start point of the edge connected to the end point of the edge being processed.
 //      */
 //     _processOneEdge:function(obstacle, sHashCode, eHashCode, edge, prevEdgeS, nextEdgeS, prevEdgeE, nextEdgeE) {
-//         var rectangle = this._losComponentCore.getSightBoundary().getRectangle();
-//         var sInclusionTestResult = ssr.LoS.Helper.pointRetangleInclusionTest(edge.getStartPoint(), rectangle);
-//         var eInclusionTestResult = ssr.LoS.Helper.pointRetangleInclusionTest(edge.getEndPoint(), rectangle);
+//         let rectangle = this._losComponentCore.getSightBoundary().getRectangle();
+//         let sInclusionTestResult = ssr.LoS.Helper.pointRetangleInclusionTest(edge.getStartPoint(), rectangle);
+//         let eInclusionTestResult = ssr.LoS.Helper.pointRetangleInclusionTest(edge.getEndPoint(), rectangle);
 //         
 //         if (sInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN &&
 //             eInclusionTestResult == ssr.LoS.Constant.POINT_RECT_TEST.IN) {
@@ -596,7 +596,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //             }
 //             else {
 //                 // [3.2]
-//                 var edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
+//                 let edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
 //                     edge.getStartPoint(), 
 //                     edge.getEndPoint(), 
 //                     this._losComponentCore.getSightBoundary().getTopLeft(), 
@@ -652,7 +652,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //             }
 //             else {
 //                 // [8.2]
-//                 var edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
+//                 let edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
 //                     edge.getStartPoint(), 
 //                     edge.getEndPoint(), 
 //                     this._losComponentCore.getSightBoundary().getTopLeft(), 
@@ -665,7 +665,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //                     obstacle.addEndPointAnglePoint(eHashCode, edge.getEndPoint(), edge, prevEdgeE, nextEdgeE);
 //                     obstacle.addPotentialBlockingEdge(edge);
 //                     //
-//                     var pointOnBoundaryEdgeArray = this._getPointOnBoundaryEdges(edge.getEndPoint());
+//                     let pointOnBoundaryEdgeArray = this._getPointOnBoundaryEdges(edge.getEndPoint());
 //                     this._narrowTest(obstacle, edge, 1, pointOnBoundaryEdgeArray);
 //                 }
 //                 else {
@@ -683,7 +683,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //             }
 //             else {
 //                 // [9.2]
-//                 var edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
+//                 let edgeRectIntersectionResult = ssr.LoS.Helper.segmentRetangleDiagonalLineIntersectionTest(
 //                     edge.getStartPoint(), 
 //                     edge.getEndPoint(), 
 //                     this._losComponentCore.getSightBoundary().getTopLeft(), 
@@ -696,7 +696,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //                     obstacle.addEndPointAnglePoint(sHashCode, edge.getStartPoint(), edge, prevEdgeS, nextEdgeS);
 //                     obstacle.addPotentialBlockingEdge(edge);
 //                     //
-//                     var pointOnBoundaryEdgeArray = this._getPointOnBoundaryEdges(edge.getStartPoint());
+//                     let pointOnBoundaryEdgeArray = this._getPointOnBoundaryEdges(edge.getStartPoint());
 //                     this._narrowTest(obstacle, edge, 1, pointOnBoundaryEdgeArray);
 //                 }
 //                 else {
@@ -717,7 +717,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //      * @return {Array.<ssr.LoS.Constant.BOUNDARY_EDGE>} The edge type array.
 //      */
 //     _getPointOnBoundaryEdges:function(point) {
-//         var pointOnBoundaryEdgeArray = [];
+//         let pointOnBoundaryEdgeArray = [];
 //         // top
 //         if (point.y == this._losComponentCore.getSightBoundary().getTopRight().y) {
 //             pointOnBoundaryEdgeArray.push(ssr.LoS.Constant.BOUNDARY_EDGE.TOP);
@@ -768,25 +768,25 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //      * @param {Array.<ssr.LoS.Constant.BOUNDARY_EDGE>} [skipEdgeTypeArray=undefined] The edge types that can be skipped when doing the narrow test.
 //      */
 //     _narrowTest:function(obstacle, edge, expectIntersectionCount, skipEdgeTypeArray) {
-//         var s = edge.getStartPoint();
-//         var e = edge.getEndPoint();
-//         var checkSightBoundaryEdgeArray = [
+//         let s = edge.getStartPoint();
+//         let e = edge.getEndPoint();
+//         let checkSightBoundaryEdgeArray = [
 //             ssr.LoS.Constant.BOUNDARY_EDGE.TOP,
 //             ssr.LoS.Constant.BOUNDARY_EDGE.RIGHT,
 //             ssr.LoS.Constant.BOUNDARY_EDGE.BUTTOM,
 //             ssr.LoS.Constant.BOUNDARY_EDGE.LEFT
 //         ];
-//         for (var i = 0; i < checkSightBoundaryEdgeArray.length; i ++) {
-//             var edgeType = checkSightBoundaryEdgeArray[i];
+//         for (let i = 0; i < checkSightBoundaryEdgeArray.length; i ++) {
+//             let edgeType = checkSightBoundaryEdgeArray[i];
 //             if (skipEdgeTypeArray && ssr.LoS.Helper.isElementInArray(edgeType, skipEdgeTypeArray)) {
 //                 continue;
 //             }
-//             var sightBoundaryEdge = this._getSightBoundaryEdge(edgeType);
-//             var intersection = cc.v2(0, 0);
-//             var intersectionHashCode = "";
-//             var intersectionCount = 0;
+//             let sightBoundaryEdge = this._getSightBoundaryEdge(edgeType);
+//             let intersection = cc.v2(0, 0);
+//             let intersectionHashCode = "";
+//             let intersectionCount = 0;
 //             if (ssr.LoS.Helper.segmentSegmentTest(s, e, sightBoundaryEdge[0], sightBoundaryEdge[1])) {
-//                 var intersection = ssr.LoS.Helper.segmentSegmentIntersect(s, e, sightBoundaryEdge[0], sightBoundaryEdge[1]);
+//                 let intersection = ssr.LoS.Helper.segmentSegmentIntersect(s, e, sightBoundaryEdge[0], sightBoundaryEdge[1]);
 //                 if (intersection) {
 //                     intersectionCount += 1;
 //                     intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersection);
@@ -806,10 +806,10 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //      * @return {Array.<ssr.LoS.Data.Edge>} The edge array.
 //      */
 //     _extractSightBoundaryEdges:function() {
-//         var sightBoundary = this._losComponentCore.getSightBoundary();
+//         let sightBoundary = this._losComponentCore.getSightBoundary();
 //         // top
-//         var edgeArray = [];
-//         var edgeTop = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+//         let edgeArray = [];
+//         let edgeTop = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
 //         edgeTop.init(
 //             sightBoundary.getTopLeft(), 
 //             sightBoundary.getTopRight(), 
@@ -818,7 +818,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //         );
 //         edgeArray.push(edgeTop);
 //         // right
-//         var edgeRight = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+//         let edgeRight = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
 //         edgeRight.init(
 //             sightBoundary.getTopRight(), 
 //             sightBoundary.getBottomRight(), 
@@ -827,7 +827,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //         );
 //         edgeArray.push(edgeRight);
 //         // bottom
-//         var edgeBottom = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+//         let edgeBottom = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
 //         edgeBottom.init(
 //             sightBoundary.getBottomRight(), 
 //             sightBoundary.getBottomLeft(), 
@@ -836,7 +836,7 @@ ssr.LoS.Strategy.Culling.UnlimitedRange = ssrLoSStrategyCullingUnlimitedRange;
 //         );
 //         edgeArray.push(edgeBottom);
 //         // left
-//         var edgeLeft = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+//         let edgeLeft = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
 //         edgeLeft.init(
 //             sightBoundary.getBottomLeft(), 
 //             sightBoundary.getTopLeft(),

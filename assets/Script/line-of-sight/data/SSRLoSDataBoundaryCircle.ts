@@ -1,28 +1,29 @@
 
 import { _decorator } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
-import {  ssrLoSDataBoundary } from './SSRLoSDataBoundary';
+import ssr from '../namespace/SSRLoSNamespace';
+import { ssrLoSDataBoundary } from './SSRLoSDataBoundary';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSDataBoundaryCircle')
 export class ssrLoSDataBoundaryCircle extends ssrLoSDataBoundary {
-    _center: any;
-    _radius: any;
+        _center: any;
+        _radius: any;
 
 
-    constructor () {
-            this._type = ssr.LoS.Constant.BOUNDARY_TYPE.CIRCLE; 
-            this._center = arguments[0]; 
-            this._radius = arguments[1]; 
-    }
+        constructor() {
+                super();
+                this._type = ssr.LoS.Constant.BOUNDARY_TYPE.CIRCLE;
+                this._center = arguments[0];
+                this._radius = arguments[1];
+        }
 
-    getCenter () {
-            return this._center; 
-    }
+        getCenter() {
+                return this._center;
+        }
 
-    getRadius () {
-            return this._radius; 
-    }
+        getRadius() {
+                return this._radius;
+        }
 
 }
 

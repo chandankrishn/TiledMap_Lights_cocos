@@ -26,7 +26,7 @@ import { ssrLoSDataAnglePoint } from "../data/SSRLoSDataAnglePoint";
  ****************************************************************************/
 //  we can define interface SsrType
 
-var ssr : any = {};
+let ssr: any = {};
 
 /**
  * LoS Namespace

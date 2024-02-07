@@ -83,63 +83,63 @@ THE SOFTWARE.
 * @return {Array.<cc.Point>} The right edge of the boundary.
 */
 import { Vec2, Vec3, _decorator } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
-import {  ssrLoSDataBoundary } from './SSRLoSDataBoundary';
+import ssr from '../namespace/SSRLoSNamespace';
+import { ssrLoSDataBoundary } from './SSRLoSDataBoundary';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSDataBoundaryRectangle')
 export class ssrLoSDataBoundaryRectangle extends ssrLoSDataBoundary {
-    _rectangle: any;
-    _topLeft: any;
-    _topRight: any;
-    _bottomRight: any;
-    _bottomLeft: any;
+        _rectangle: any;
+        _topLeft: any;
+        _topRight: any;
+        _bottomRight: any;
+        _bottomLeft: any;
 
-    constructor () {
-        super();
-            this._type = ssr.LoS.Constant.BOUNDARY_TYPE.RECTANGLE; 
-            this._rectangle = arguments[0]; 
-            this._topLeft = new Vec2(this._rectangle.x, this._rectangle.y + this._rectangle.height); 
-            this._topRight = new Vec2(this._rectangle.x + this._rectangle.width, this._rectangle.y + this._rectangle.height); 
-            this._bottomRight = new Vec2(this._rectangle.x + this._rectangle.width, this._rectangle.y); 
-            this._bottomLeft = new Vec2(this._rectangle.x, this._rectangle.y); 
-    }
+        constructor() {
+                super();
+                this._type = ssr.LoS.Constant.BOUNDARY_TYPE.RECTANGLE;
+                this._rectangle = arguments[0];
+                this._topLeft = new Vec3(this._rectangle.x, this._rectangle.y + this._rectangle.height, 0);
+                this._topRight = new Vec3(this._rectangle.x + this._rectangle.width, this._rectangle.y + this._rectangle.height, 0);
+                this._bottomRight = new Vec3(this._rectangle.x + this._rectangle.width, this._rectangle.y, 0);
+                this._bottomLeft = new Vec3(this._rectangle.x, this._rectangle.y, 0);
+        }
 
-    getRectangle () {
-            return this._rectangle;    
-    }
+        getRectangle() {
+                return this._rectangle;
+        }
 
-    getTopLeft () {
-            return this._topLeft; 
-    }
+        getTopLeft() {
+                return this._topLeft;
+        }
 
-    getTopRight () {
-            return this._topRight; 
-    }
+        getTopRight() {
+                return this._topRight;
+        }
 
-    getBottomLeft () {
-            return this._bottomLeft; 
-    }
+        getBottomLeft() {
+                return this._bottomLeft;
+        }
 
-    getBottomRight () {
-            return this._bottomRight; 
-    }
+        getBottomRight() {
+                return this._bottomRight;
+        }
 
-    getTopEdge () {
-            return [this.getTopLeft(), this.getTopRight()]; 
-    }
+        getTopEdge() {
+                return [this.getTopLeft(), this.getTopRight()];
+        }
 
-    getLeftEdge () {
-            return [this.getBottomLeft(), this.getTopLeft()]; 
-    }
+        getLeftEdge() {
+                return [this.getBottomLeft(), this.getTopLeft()];
+        }
 
-    getBottomEdge () {
-            return [this.getBottomRight(), this.getBottomLeft()]; 
-    }
+        getBottomEdge() {
+                return [this.getBottomRight(), this.getBottomLeft()];
+        }
 
-    getRightEdge () {
-            return [this.getTopRight(), this.getBottomRight()]; 
-    }
+        getRightEdge() {
+                return [this.getTopRight(), this.getBottomRight()];
+        }
 
 }
 

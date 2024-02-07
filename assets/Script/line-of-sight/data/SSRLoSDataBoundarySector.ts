@@ -72,66 +72,67 @@ THE SOFTWARE.
 * @return {Number} The direction of the boundary.
 */
 import { Vec2, _decorator, macro } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
-import {  ssrLoSDataBoundary } from './SSRLoSDataBoundary';
+import ssr from '../namespace/SSRLoSNamespace';
+import { ssrLoSDataBoundary } from './SSRLoSDataBoundary';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSDataBoundarySector')
 export class ssrLoSDataBoundarySector extends ssrLoSDataBoundary {
-    _center: any;
-    _radius: any;
-    _radiusSQ!: number;
-    _dir: any;
-    _edges!: any[];
-    _edgesVec!: any[];
-    halfRadiansCos!: number;
-   
+        _center: any;
+        _radius: any;
+        _radiusSQ!: number;
+        _dir: any;
+        _edges!: any[];
+        _edgesVec!: any[];
+        halfRadiansCos!: number;
 
-    constructor () {
-            this._type = ssr.LoS.Constant.BOUNDARY_TYPE.SECTOR; 
-            this._center = arguments[0]; 
-            this._radius = arguments[1]; 
-            this._radiusSQ = this._radius * this._radius; 
-            this._dir = arguments[2]; 
-            this._edges = []; 
-            this._edgesVec = []; 
-            var halfRadians = arguments[3] * macro.RAD * 0.5; 
-            var halfRadiansSin = Math.sin(halfRadians); 
-            var halfRadiansCos = Math.cos(halfRadians); 
-            this.halfRadiansCos = halfRadiansCos; 
-            var xC = this._dir.x * halfRadiansCos; 
-            var yC = this._dir.y * halfRadiansCos; 
-            var xS = this._dir.x * halfRadiansSin; 
-            var yS = this._dir.y * halfRadiansSin; 
-            this._edgesVec[0] = new Vec2((xC + yS) * this._radius, (-xS + yC) * this._radius); 
-            this._edgesVec[1] = new Vec2((xC - yS) * this._radius, (xS + yC) * this._radius); 
-            this._edges[0] = new Vec2(this._center.x + this._edgesVec[0].x, this._center.y + this._edgesVec[0].y); 
-            this._edges[1] = new Vec2(this._center.x + this._edgesVec[1].x, this._center.y + this._edgesVec[1].y); 
-    }
 
-    getCenter () {
-            return this._center; 
-    }
+        constructor() {
+                super();
+                this._type = ssr.LoS.Constant.BOUNDARY_TYPE.SECTOR;
+                this._center = arguments[0];
+                this._radius = arguments[1];
+                this._radiusSQ = this._radius * this._radius;
+                this._dir = arguments[2];
+                this._edges = [];
+                this._edgesVec = [];
+                let halfRadians = arguments[3] * macro.RAD * 0.5;
+                let halfRadiansSin = Math.sin(halfRadians);
+                let halfRadiansCos = Math.cos(halfRadians);
+                this.halfRadiansCos = halfRadiansCos;
+                let xC = this._dir.x * halfRadiansCos;
+                let yC = this._dir.y * halfRadiansCos;
+                let xS = this._dir.x * halfRadiansSin;
+                let yS = this._dir.y * halfRadiansSin;
+                this._edgesVec[0] = new Vec2((xC + yS) * this._radius, (-xS + yC) * this._radius);
+                this._edgesVec[1] = new Vec2((xC - yS) * this._radius, (xS + yC) * this._radius);
+                this._edges[0] = new Vec2(this._center.x + this._edgesVec[0].x, this._center.y + this._edgesVec[0].y);
+                this._edges[1] = new Vec2(this._center.x + this._edgesVec[1].x, this._center.y + this._edgesVec[1].y);
+        }
 
-    getRadius () {
-            return this._radius; 
-    }
+        getCenter() {
+                return this._center;
+        }
 
-    getRadiusSQ () {
-            return this._radiusSQ; 
-    }
+        getRadius() {
+                return this._radius;
+        }
 
-    getEdges () {
-            return this._edges; 
-    }
+        getRadiusSQ() {
+                return this._radiusSQ;
+        }
 
-    getEdgesVec () {
-            return this._edgesVec; 
-    }
+        getEdges() {
+                return this._edges;
+        }
 
-    getDir () {
-            return this._dir; 
-    }
+        getEdgesVec() {
+                return this._edgesVec;
+        }
+
+        getDir() {
+                return this._dir;
+        }
 
 }
 ssr.LoS.Data.BoundarySector = ssrLoSDataBoundarySector;
@@ -200,16 +201,16 @@ ssr.LoS.Data.BoundarySector = ssrLoSDataBoundarySector;
 //         this._edges = [];
 //         this._edgesVec = [];
 // 
-//         var halfRadians = arguments[3] * cc.macro.RAD * 0.5;
-//         var halfRadiansSin = Math.sin(halfRadians);
-//         var halfRadiansCos = Math.cos(halfRadians);
+//         let halfRadians = arguments[3] * cc.macro.RAD * 0.5;
+//         let halfRadiansSin = Math.sin(halfRadians);
+//         let halfRadiansCos = Math.cos(halfRadians);
 // 
 //         this.halfRadiansCos = halfRadiansCos;
 // 
-//         var xC = this._dir.x * halfRadiansCos;
-//         var yC = this._dir.y * halfRadiansCos;
-//         var xS = this._dir.x * halfRadiansSin;
-//         var yS = this._dir.y * halfRadiansSin;
+//         let xC = this._dir.x * halfRadiansCos;
+//         let yC = this._dir.y * halfRadiansCos;
+//         let xS = this._dir.x * halfRadiansSin;
+//         let yS = this._dir.y * halfRadiansSin;
 // 
 //         this._edgesVec[0] = cc.v2((xC + yS) * this._radius, (-xS + yC) * this._radius);
 //         this._edgesVec[1] = cc.v2((xC - yS) * this._radius, (xS + yC) * this._radius);

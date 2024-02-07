@@ -63,77 +63,77 @@ THE SOFTWARE.
 * @function
 */
 import { _decorator } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
+import ssr from '../namespace/SSRLoSNamespace';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSDataPool')
 export class ssrLoSDataPool {
     _pool!: {};
 
-    constructor () {
-            this._pool = {}; 
+    constructor() {
+        this._pool = {};
     }
 
-    getNewID () {
-            return ssr.LoS.Data.Pool.id ++; 
+    getNewID() {
+        return ssr.LoS.Data.Pool.id++;
     }
 
-    put (obj: any) {
-            var pid = obj.constructor.prototype['__pid']; 
-            if (!pid) { 
-                var desc = {writable: true, enumerable: false, configurable: true , value : 0 }; 
-                desc.value = this.getNewID(); 
-                Object.defineProperty(obj.constructor.prototype, '__pid', desc); 
-            } 
-            if (!this._pool[pid]) { 
-                this._pool[pid] = []; 
-            } 
-            this._pool[pid].push(obj); 
+    put(obj: any) {
+        let pid = obj.constructor.prototype['__pid'];
+        if (!pid) {
+            let desc = { writable: true, enumerable: false, configurable: true, value: 0 };
+            desc.value = this.getNewID();
+            Object.defineProperty(obj.constructor.prototype, '__pid', desc);
+        }
+        if (!this._pool[pid]) {
+            this._pool[pid] = [];
+        }
+        this._pool[pid].push(obj);
     }
 
-    has (objClass: any) {
-            var pid = objClass.prototype['__pid']; 
-            var list = this._pool[pid]; 
-            if (!list || list.length === 0) { 
-                return false; 
-            } 
-            return true; 
+    has(objClass: any) {
+        let pid = objClass.prototype['__pid'];
+        let list = this._pool[pid];
+        if (!list || list.length === 0) {
+            return false;
+        }
+        return true;
     }
 
-    remove (obj: any) {
-            var pid = obj.constructor.prototype['__pid']; 
-            if (pid) { 
-                var list = this._pool[pid]; 
-                if (list) { 
-                    for (var i = 0; i < list.length; i++) { 
-                        if (obj === list[i]) { 
-                            list.splice(i, 1); 
-                        } 
-                    } 
-                } 
-            } 
+    remove(obj: any) {
+        let pid = obj.constructor.prototype['__pid'];
+        if (pid) {
+            let list = this._pool[pid];
+            if (list) {
+                for (let i = 0; i < list.length; i++) {
+                    if (obj === list[i]) {
+                        list.splice(i, 1);
+                    }
+                }
+            }
+        }
     }
 
-    get (objClass: any) {
-            if (this.has(objClass)) { 
-                var pid = objClass.prototype['__pid']; 
-                var list = this._pool[pid]; 
-                var args = Array.prototype.slice.call(arguments); 
-                args.shift(); 
-                var obj = list.pop(); 
-                return obj; 
-            } 
+    get(objClass: any) {
+        if (this.has(objClass)) {
+            let pid = objClass.prototype['__pid'];
+            let list = this._pool[pid];
+            let args = Array.prototype.slice.call(arguments);
+            args.shift();
+            let obj = list.pop();
+            return obj;
+        }
     }
 
-    reset () {
-            this._pool = {}; 
+    reset() {
+        this._pool = {};
     }
 
 }
 
 ssr.LoS.Data.Pool = ssrLoSDataPool;
-ssr.LoS.Data.Pool.id = (0|(Math.random()*998));
-ssr.LoS.Data.Pool.instanceId = (0|(Math.random()*998));
+ssr.LoS.Data.Pool.id = (0 | (Math.random() * 998));
+ssr.LoS.Data.Pool.instanceId = (0 | (Math.random() * 998));
 /**
  * Note: The original script has been commented out, due to the large number of changes in the script, there may be missing in the conversion, you need to convert it manually
  */
@@ -194,9 +194,9 @@ ssr.LoS.Data.Pool.instanceId = (0|(Math.random()*998));
 //      * @param {Object} obj
 //      */
 //     put: function (obj) {
-//         var pid = obj.constructor.prototype['__pid'];
+//         let pid = obj.constructor.prototype['__pid'];
 //         if (!pid) {
-//             var desc = {writable: true, enumerable: false, configurable: true};
+//             let desc = {writable: true, enumerable: false, configurable: true};
 //             desc.value = this.getNewID();
 //             Object.defineProperty(obj.constructor.prototype, '__pid', desc);
 //         }
@@ -212,8 +212,8 @@ ssr.LoS.Data.Pool.instanceId = (0|(Math.random()*998));
 //      * @return {Boolean}
 //      */
 //     has: function (objClass) {
-//         var pid = objClass.prototype['__pid'];
-//         var list = this._pool[pid];
+//         let pid = objClass.prototype['__pid'];
+//         let list = this._pool[pid];
 //         if (!list || list.length === 0) {
 //             return false;
 //         }
@@ -225,11 +225,11 @@ ssr.LoS.Data.Pool.instanceId = (0|(Math.random()*998));
 //      * @param {Object} obj
 //      */
 //     remove: function (obj) {
-//         var pid = obj.constructor.prototype['__pid'];
+//         let pid = obj.constructor.prototype['__pid'];
 //         if (pid) {
-//             var list = this._pool[pid];
+//             let list = this._pool[pid];
 //             if (list) {
-//                 for (var i = 0; i < list.length; i++) {
+//                 for (let i = 0; i < list.length; i++) {
 //                     if (obj === list[i]) {
 //                         list.splice(i, 1);
 //                     }
@@ -244,11 +244,11 @@ ssr.LoS.Data.Pool.instanceId = (0|(Math.random()*998));
 //      */
 //     get: function (objClass) {
 //         if (this.has(objClass)) {
-//             var pid = objClass.prototype['__pid'];
-//             var list = this._pool[pid];
-//             var args = Array.prototype.slice.call(arguments);
+//             let pid = objClass.prototype['__pid'];
+//             let list = this._pool[pid];
+//             let args = Array.prototype.slice.call(arguments);
 //             args.shift();
-//             var obj = list.pop();
+//             let obj = list.pop();
 //             return obj;
 //         }
 //     },

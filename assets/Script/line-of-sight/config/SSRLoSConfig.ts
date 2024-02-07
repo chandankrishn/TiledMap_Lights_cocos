@@ -33,8 +33,8 @@ import ssr from "../namespace/SSRLoSNamespace";
  * @type Array.<String>
  */
 ssr.LoS.Config.Modules = [
-    "Core", 
-    "Util", 
+    "Core",
+    "Util",
     // "Obstacle", 
     // "Mask",
     // "RenderBase",
@@ -57,9 +57,9 @@ ssr.LoS.Config.Modules = [
  * @param {String} moduleName The module name.
  * @return {Boolean} True for available false for not.
  */
-ssr.LoS.Config.isModuleNativeImplemented = function(moduleName : any) {
-    if(sys.isNative) {
-        var moduleNativeName = moduleName + "Native";
+ssr.LoS.Config.isModuleNativeImplemented = function (moduleName: any) {
+    if (sys.isNative) {
+        let moduleNativeName = moduleName + "Native";
         if (ssr.LoS.Component[moduleNativeName]) {
             return true;
         }
@@ -81,9 +81,9 @@ ssr.LoS.Config.isModuleNativeImplemented = function(moduleName : any) {
  * @private
  * @param {String} moduleName The module name.
  */
-ssr.LoS.Config.enableModuNativeImplemention = function(moduleName: any) {
-    if(sys.isNative) {
-        var moduleNativeName = moduleName;
+ssr.LoS.Config.enableModuNativeImplemention = function (moduleName: any) {
+    if (sys.isNative) {
+        let moduleNativeName = moduleName;
         if (ssr.LoS.Component[moduleName]) {
             ssr.LoS.Component[moduleName] = ssr.LoS.Component[moduleNativeName];
         }
@@ -101,10 +101,10 @@ ssr.LoS.Config.enableModuNativeImplemention = function(moduleName: any) {
  * @function
  * @private
  */
-ssr.LoS.Config.__initModules = function() {
-    if(sys.isNative) {
-       for (var i = 0; i < ssr.LoS.Config.Modules.length; i ++) {
-            var moduleName = ssr.LoS.Config.Modules[i];
+ssr.LoS.Config.__initModules = function () {
+    if (sys.isNative) {
+        for (let i = 0; i < ssr.LoS.Config.Modules.length; i++) {
+            let moduleName = ssr.LoS.Config.Modules[i];
             if (ssr.LoS.Config.isModuleNativeImplemented(moduleName)) {
                 ssr.LoS.Config.enableModuNativeImplemention(moduleName);
                 console.log("isModuleNativeImplemented ok: " + moduleName);

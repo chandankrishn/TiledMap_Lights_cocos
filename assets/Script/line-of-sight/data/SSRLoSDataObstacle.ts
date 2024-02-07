@@ -238,268 +238,274 @@ setVertexArrayProvider
 * @callback vertexArrayProvider
 * @return {Array.<cc.Point>}
 */
-import { Vec2, _decorator } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
+import { Vec2, Vec3, Vertex, _decorator } from 'cc';
+import ssr from '../namespace/SSRLoSNamespace';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSDataObstacle')
- export class ssrLoSDataObstacle {
-    _node: any;
-    _obstacleEdgeArray: any[] = [];
-    _anglePointArray: any[] = [];
-    _anglePointMap!: {};
-    _anglePointAuxiliaryArray: any[] = [];
-    _potentialBlockingEdgeArray: any[] = [];
-    _dirtyFlag: boolean = false;
-    _dirtyDetection: boolean = false;
-    _isPolyogn: any;
-    _isSkipProcess: any;
-    _vertexArrayProvider: any =  null;
-    __index: any;
-    _vertexArray: any;
+export class ssrLoSDataObstacle {
+        _node: any;
+        _obstacleEdgeArray: any[] = [];
+        _anglePointArray: any[] = [];
+        _anglePointMap!: {};
+        _anglePointAuxiliaryArray: any[] = [];
+        _potentialBlockingEdgeArray: any[] = [];
+        _dirtyFlag: boolean = false;
+        _dirtyDetection: boolean = false;
+        _isPolyogn: any;
+        _isSkipProcess: any;
+        _vertexArrayProvider: any = null;
+        __index: any;
+        _vertexArray: any;
 
-    constructor () {
-            this._node = arguments[0]; 
-            this._obstacleEdgeArray = []; 
-            this._anglePointArray = []; 
-            this._anglePointMap = {}; 
-            this._anglePointAuxiliaryArray = []; 
-            this._potentialBlockingEdgeArray = []; 
-            this._dirtyFlag = true; 
-            this._dirtyDetection = false; 
-            this._isPolyogn = (arguments[2] === undefined ? true : arguments[2]); 
-            this._isSkipProcess = (arguments[3] === undefined ? false : arguments[3]); 
-            this._vertexArrayProvider = null; 
-            this.__index = ssr.LoS.Data.Obstacle.INDEX; 
-            ssr.LoS.Data.Obstacle.INDEX += 1; 
-            if (!this._isSkipProcess) { 
-                this._vertexArray = (arguments[1] === undefined ? this.generateVertexArray() : arguments[1]); 
-                this.processEdges(); 
-            } 
-    }
+        constructor() {
+                this._node = arguments[0];
+                this._obstacleEdgeArray = [];
+                this._anglePointArray = [];
+                this._anglePointMap = {};
+                this._anglePointAuxiliaryArray = [];
+                this._potentialBlockingEdgeArray = [];
+                this._dirtyFlag = true;
+                this._dirtyDetection = false;
+                this._isPolyogn = (arguments[2] === undefined ? true : arguments[2]);
+                this._isSkipProcess = (arguments[3] === undefined ? false : arguments[3]);
+                this._vertexArrayProvider = null;
+                this.__index = ssr.LoS.Data.Obstacle.INDEX;
+                ssr.LoS.Data.Obstacle.INDEX += 1;
+                if (!this._isSkipProcess) {
+                        this._vertexArray = (arguments[1] === undefined ? this.generateVertexArray() : arguments[1]);
+                        this.processEdges();
+                }
+        }
 
-    getVertexArray () {
-            return this._vertexArray; 
-    }
+        getVertexArray() {
+                return this._vertexArray;
+        }
 
-    setVertexArray (vertexArray: any) {
-            this._vertexArray = vertexArray; 
-    }
+        setVertexArray(vertexArray: any) {
+                this._vertexArray = vertexArray;
+        }
 
-    clearVertexArray () {
-            this._vertexArray = []; 
-    }
+        clearVertexArray() {
+                this._vertexArray = [];
+        }
 
-    getObstacleEdgeArray () {
-            return this._obstacleEdgeArray; 
-    }
+        getObstacleEdgeArray() {
+                return this._obstacleEdgeArray;
+        }
 
-    addObstacleEdge (edge: any) {
-            this._obstacleEdgeArray.push(edge); 
-    }
+        addObstacleEdge(edge: any) {
+                this._obstacleEdgeArray.push(edge);
+        }
 
-    clearObstacleEdgeArray () {
-            for (var i = 0, l = this._obstacleEdgeArray.length; i < l; i ++) { 
-                ssr.LoS.Data.Manager.getInstance().free(this._obstacleEdgeArray[i]); 
-            } 
-            this._obstacleEdgeArray = []; 
-    }
+        clearObstacleEdgeArray() {
+                for (let i = 0, l = this._obstacleEdgeArray.length; i < l; i++) {
+                        ssr.LoS.Data.Manager.getInstance().free(this._obstacleEdgeArray[i]);
+                }
+                this._obstacleEdgeArray = [];
+        }
 
-    getAnglePointArray () {
-            return this._anglePointArray; 
-    }
+        getAnglePointArray() {
+                return this._anglePointArray;
+        }
 
-    getAnglePointAuxiliaryArray () {
-            return this._anglePointAuxiliaryArray; 
-    }
+        getAnglePointAuxiliaryArray() {
+                return this._anglePointAuxiliaryArray;
+        }
 
-    clearAnglePointArray () {
-            for (var i = 0, l = this._anglePointArray.length; i < l; i ++) { 
-                ssr.LoS.Data.Manager.getInstance().free(this._anglePointArray[i]); 
-            } 
-            for (var i = 0, l = this._anglePointAuxiliaryArray.length; i < l; i ++) { 
-                ssr.LoS.Data.Manager.getInstance().free(this._anglePointAuxiliaryArray[i]); 
-            } 
-            this._anglePointArray = []; 
-            this._anglePointAuxiliaryArray = []; 
-            this._anglePointMap = {}; 
-    }
+        clearAnglePointArray() {
+                for (let i = 0, l = this._anglePointArray.length; i < l; i++) {
+                        ssr.LoS.Data.Manager.getInstance().free(this._anglePointArray[i]);
+                }
+                for (let i = 0, l = this._anglePointAuxiliaryArray.length; i < l; i++) {
+                        ssr.LoS.Data.Manager.getInstance().free(this._anglePointAuxiliaryArray[i]);
+                }
+                this._anglePointArray = [];
+                this._anglePointAuxiliaryArray = [];
+                this._anglePointMap = {};
+        }
 
-    getAnglePointMap () {
-            return this._anglePointMap; 
-    }
+        getAnglePointMap() {
+                return this._anglePointMap;
+        }
 
-    getPotentialBlockingEdgeArray () {
-            return this._potentialBlockingEdgeArray; 
-    }
+        getPotentialBlockingEdgeArray() {
+                return this._potentialBlockingEdgeArray;
+        }
 
-    clearPotentialBlockingEdgeArray () {
-            this._potentialBlockingEdgeArray = []; 
-    }
+        clearPotentialBlockingEdgeArray() {
+                this._potentialBlockingEdgeArray = [];
+        }
 
-    isDirty () {
-            return this._dirtyFlag; 
-    }
+        isDirty() {
+                return this._dirtyFlag;
+        }
 
-    setDirty (flag: any) {
-            this._dirtyFlag = flag; 
-    }
+        setDirty(flag: any) {
+                this._dirtyFlag = flag;
+        }
 
-    isPolygon () {
-            return this._isPolyogn; 
-    }
+        isPolygon() {
+                return this._isPolyogn;
+        }
 
-    setVertexArrayProvider (vertexArrayProvider: any) {
-            this._vertexArrayProvider = vertexArrayProvider; 
-    }
+        setVertexArrayProvider(vertexArrayProvider: any) {
+                this._vertexArrayProvider = vertexArrayProvider;
+        }
 
-    removeVertexArrayProvider () {
-            this._vertexArrayProvider = null; 
-    }
+        removeVertexArrayProvider() {
+                this._vertexArrayProvider = null;
+        }
 
-    isDirtyDetectionOn () {
-            return this._dirtyDetection; 
-    }
+        isDirtyDetectionOn() {
+                return this._dirtyDetection;
+        }
 
-    enableDirtyDetection () {
-            this._dirtyDetection = true; 
-    }
+        enableDirtyDetection() {
+                this._dirtyDetection = true;
+        }
 
-    disableDirtyDetection () {
-            this._dirtyDetection = false; 
-    }
+        disableDirtyDetection() {
+                this._dirtyDetection = false;
+        }
 
-    getNode () {
-            return this._node; 
-    }
+        getNode() {
+                return this._node;
+        }
 
-    generateVertexArray () {
-            var vertexArray = []; 
-            var rect = this._node.getBoundingBox(); 
-            var left = rect.xMin; 
-            var right = rect.xMax; 
-            var top = rect.yMax; 
-            var bottom = rect.yMin; 
-            var topLeft = new Vec2(left, top); 
-            var topRight = new Vec2(right, top); 
-            var bottomLeft = new Vec2(left, bottom); 
-            var bottomRight = new Vec2(right, bottom); 
-            vertexArray.push(bottomLeft); 
-            vertexArray.push(bottomRight); 
-            vertexArray.push(topRight); 
-            vertexArray.push(topLeft); 
-            return vertexArray; 
-    }
+        generateVertexArray() {
+                let vertexArray = [];
+                let rect = this._node.getBoundingBox();
+                let left = rect.xMin;
+                let right = rect.xMax;
+                let top = rect.yMax;
+                let bottom = rect.yMin;
+                console.log(rect);
 
-    cleanup () {
-            this.clearVertexArray(); 
-            this.clearObstacleEdgeArray(); 
-            this.clearAnglePointArray(); 
-            this.clearPotentialBlockingEdgeArray(); 
-    }
+                let topLeft = new Vec3(left, top, 0);
+                let topRight = new Vec3(right, top, 0);
+                let bottomLeft = new Vec3(left, bottom, 0);
+                let bottomRight = new Vec3(right, bottom, 0);
+                vertexArray.push(bottomLeft);
+                vertexArray.push(bottomRight);
+                vertexArray.push(topRight);
+                vertexArray.push(topLeft);
+                return vertexArray;
+        }
 
-    cleanupForProcess () {
-            this.clearAnglePointArray(); 
-            this._potentialBlockingEdgeArray = []; 
-            this._dirtyFlag = true; 
-    }
+        cleanup() {
+                this.clearVertexArray();
+                this.clearObstacleEdgeArray();
+                this.clearAnglePointArray();
+                this.clearPotentialBlockingEdgeArray();
+        }
 
-    processEdges () {
-            if (this.isPolygon()) { 
-                this._processAsPolyogn(); 
-            } 
-            else { 
-                this._processAsPolyline(); 
-            } 
-    }
+        cleanupForProcess() {
+                this.clearAnglePointArray();
+                this._potentialBlockingEdgeArray = [];
+                this._dirtyFlag = true;
+        }
 
-    _processAsPolyogn () {
-            for (var j = 0, ll = this._vertexArray.length; j < ll; j += 1) { 
-                var s = this._vertexArray[j]; 
-                var e = (j == ll - 1) ? this._vertexArray[0] : this._vertexArray[j + 1]; 
-                var edge = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge); 
-                edge.init(s, e, this.__index * 1000 + j + 1, ssr.LoS.Constant.EDGE_TYPE.POLYGON); 
-                this.addObstacleEdge(edge); 
-            } 
-    }
+        processEdges() {
+                if (this.isPolygon()) {
+                        this._processAsPolyogn();
+                }
+                else {
+                        this._processAsPolyline();
+                }
+        }
 
-    _processAsPolyline () {
-            for (var j = 0, ll = this._vertexArray.length; j < ll - 1; j += 1) { 
-                var s = this._vertexArray[j]; 
-                var e = this._vertexArray[j + 1]; 
-                var edge = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge); 
-                edge.init(s, e, this.__index * 1000 + j + 1, ssr.LoS.Constant.EDGE_TYPE.POLYLINE); 
-                this.addObstacleEdge(edge); 
-            } 
-    }
+        _processAsPolyogn() {
+                for (let j = 0, ll = this._vertexArray.length; j < ll; j += 1) {
+                        let s = this._vertexArray[j];
+                        let e = (j == ll - 1) ? this._vertexArray[0] : this._vertexArray[j + 1];
+                        let edge = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+                        console.log(e);
 
-    update (vertexArray: any) {
-            this.cleanup(); 
-            if (vertexArray) { 
-                this._vertexArray = vertexArray; 
-            } 
-            else if (this._vertexArrayProvider) { 
-                this._vertexArray = this._vertexArrayProvider.call(this._node); 
-            } 
-            else { 
-                this._vertexArray = this.generateVertexArray(); 
-            } 
-            if (!this._isSkipProcess) { 
-                this.processEdges(); 
-            } 
-            this._dirtyFlag = true; 
-    }
+                        edge.init(s, e, this.__index * 1000 + j + 1, ssr.LoS.Constant.EDGE_TYPE.POLYGON);
+                        this.addObstacleEdge(edge);
+                }
+        }
 
-    hasAnglePoint (key: any) {
-            return this._anglePointMap.hasOwnProperty(key); 
-    }
+        _processAsPolyline() {
+                for (let j = 0, ll = this._vertexArray.length; j < ll - 1; j += 1) {
+                        let s = this._vertexArray[j];
+                        let e = this._vertexArray[j + 1];
+                        let edge = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+                        edge.init(s, e, this.__index * 1000 + j + 1, ssr.LoS.Constant.EDGE_TYPE.POLYLINE);
+                        this.addObstacleEdge(edge);
+                }
+        }
 
-    addAnglePoint (key: any, anglePoint: any) {
-            this._anglePointArray.push(anglePoint); 
-            this._anglePointMap[key] = true; 
-    }
+        update(vertexArray: any) {
+                this.cleanup();
+                if (vertexArray) {
+                        this._vertexArray = vertexArray;
+                }
+                else if (this._vertexArrayProvider) {
+                        this._vertexArray = this._vertexArrayProvider.call(this._node);
+                }
+                else {
+                        this._vertexArray = this.generateVertexArray();
+                }
+                if (!this._isSkipProcess) {
+                        this.processEdges();
+                }
+                this._dirtyFlag = true;
+        }
 
-    addPotentialBlockingEdge (edge: any) {
-            this._potentialBlockingEdgeArray.push(edge); 
-    }
+        hasAnglePoint(key: any) {
+                return this._anglePointMap.hasOwnProperty(key);
+        }
 
-    addEndPointAnglePoint (hashCode: any, point: any, edge: any, prevEdge: any, nextEdge: any) {
-            if (!this.hasAnglePoint(hashCode)) { 
-                var edgeIDs = []; 
-                if (prevEdge) { 
-                    edgeIDs.push(prevEdge.getEdgeID()); 
-                } 
-                if (nextEdge) { 
-                    edgeIDs.push(nextEdge.getEdgeID()); 
-                } 
-                var anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint); 
-                anglePoint.init(point, edgeIDs, ssr.LoS.Constant.ANGLE_POINT_TYPE.ENDPOINT, prevEdge, nextEdge); 
-                this.addAnglePoint(hashCode, anglePoint); 
-            } 
-    }
+        addAnglePoint(key: any, anglePoint: any) {
+                this._anglePointArray.push(anglePoint);
+                this._anglePointMap[key] = true;
+        }
 
-    addBoundaryAnglePoint (hashCode: any, point: any, edge: any) {
-            if (!this.hasAnglePoint(hashCode)) { 
-                var anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint); 
-                anglePoint.init(point, [edge.getEdgeID()], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY); 
-                this.addAnglePoint(hashCode, anglePoint); 
-            } 
-    }
+        addPotentialBlockingEdge(edge: any) {
+                this._potentialBlockingEdgeArray.push(edge);
+        }
 
-    addAuxiliaryAnglePoint (anglePoint: any) {
-            this._anglePointAuxiliaryArray.push(anglePoint); 
-    }
+        addEndPointAnglePoint(hashCode: any, point: any, edge: any, prevEdge: any, nextEdge: any) {
+                if (!this.hasAnglePoint(hashCode)) {
+                        let edgeIDs = [];
+                        if (prevEdge) {
+                                edgeIDs.push(prevEdge.getEdgeID());
+                        }
+                        if (nextEdge) {
+                                edgeIDs.push(nextEdge.getEdgeID());
+                        }
+                        let anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+                        anglePoint.init(point, edgeIDs, ssr.LoS.Constant.ANGLE_POINT_TYPE.ENDPOINT, prevEdge, nextEdge);
+                        // console.trace("Added angle point", anglePoint);
+                        this.addAnglePoint(hashCode, anglePoint);
+                }
+        }
+
+        addBoundaryAnglePoint(hashCode: any, point: any, edge: any) {
+                if (!this.hasAnglePoint(hashCode)) {
+                        let anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+                        anglePoint.init(point, [edge.getEdgeID()], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY);
+                        // console.trace("Added angle point", anglePoint);
+                        this.addAnglePoint(hashCode, anglePoint);
+                }
+        }
+
+        addAuxiliaryAnglePoint(anglePoint: any) {
+                this._anglePointAuxiliaryArray.push(anglePoint);
+        }
 
 }
-
 
 
 ssr.LoS.Data.Obstacle = ssrLoSDataObstacle;
 
 ssr.LoS.Data.Obstacle.INDEX = 1;
-ssr.LoS.Data.Obstacle.resetIndex = function() {
-    ssr.LoS.Data.Obstacle.INDEX = 1;    
+ssr.LoS.Data.Obstacle.resetIndex = function () {
+        ssr.LoS.Data.Obstacle.INDEX = 1;
 };
+
 /**
  * Note: The original script has been commented out, due to the large number of changes in the script, there may be missing in the conversion, you need to convert it manually
  */
@@ -628,7 +634,7 @@ ssr.LoS.Data.Obstacle.resetIndex = function() {
 //      * @function
 //      */
 //     clearObstacleEdgeArray:function() {
-//         for (var i = 0, l = this._obstacleEdgeArray.length; i < l; i ++) {
+//         for (let i = 0, l = this._obstacleEdgeArray.length; i < l; i ++) {
 //             ssr.LoS.Data.Manager.getInstance().free(this._obstacleEdgeArray[i]);
 //         }
 //         this._obstacleEdgeArray = [];
@@ -654,10 +660,10 @@ ssr.LoS.Data.Obstacle.resetIndex = function() {
 //      * @function
 //      */
 //     clearAnglePointArray:function() {
-//         for (var i = 0, l = this._anglePointArray.length; i < l; i ++) {
+//         for (let i = 0, l = this._anglePointArray.length; i < l; i ++) {
 //             ssr.LoS.Data.Manager.getInstance().free(this._anglePointArray[i]);
 //         }
-//         for (var i = 0, l = this._anglePointAuxiliaryArray.length; i < l; i ++) {
+//         for (let i = 0, l = this._anglePointAuxiliaryArray.length; i < l; i ++) {
 //             ssr.LoS.Data.Manager.getInstance().free(this._anglePointAuxiliaryArray[i]);
 //         }
 //         this._anglePointArray = [];
@@ -762,16 +768,16 @@ ssr.LoS.Data.Obstacle.resetIndex = function() {
 //      * return {Array.<cc.Point>} The vertex array.
 //      */
 //     generateVertexArray:function() {
-//         var vertexArray = [];
-//         var rect = this._node.getBoundingBox();
-//         var left = rect.xMin;
-//         var right = rect.xMax;
-//         var top = rect.yMax;
-//         var bottom = rect.yMin;
-//         var topLeft = cc.v2(left, top);
-//         var topRight = cc.v2(right, top);
-//         var bottomLeft = cc.v2(left, bottom);
-//         var bottomRight = cc.v2(right, bottom);
+//         let vertexArray = [];
+//         let rect = this._node.getBoundingBox();
+//         let left = rect.xMin;
+//         let right = rect.xMax;
+//         let top = rect.yMax;
+//         let bottom = rect.yMin;
+//         let topLeft = cc.v2(left, top);
+//         let topRight = cc.v2(right, top);
+//         let bottomLeft = cc.v2(left, bottom);
+//         let bottomRight = cc.v2(right, bottom);
 //         vertexArray.push(bottomLeft);
 //         vertexArray.push(bottomRight);
 //         vertexArray.push(topRight);
@@ -817,10 +823,10 @@ ssr.LoS.Data.Obstacle.resetIndex = function() {
 //      * @private
 //      */
 //     _processAsPolyogn:function() {
-//         for (var j = 0, ll = this._vertexArray.length; j < ll; j += 1) {
-//             var s = this._vertexArray[j];
-//             var e = (j == ll - 1) ? this._vertexArray[0] : this._vertexArray[j + 1];
-//             var edge = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+//         for (let j = 0, ll = this._vertexArray.length; j < ll; j += 1) {
+//             let s = this._vertexArray[j];
+//             let e = (j == ll - 1) ? this._vertexArray[0] : this._vertexArray[j + 1];
+//             let edge = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
 //             edge.init(s, e, this.__index * 1000 + j + 1, ssr.LoS.Constant.EDGE_TYPE.POLYGON);
 //             this.addObstacleEdge(edge);
 //         }
@@ -831,10 +837,10 @@ ssr.LoS.Data.Obstacle.resetIndex = function() {
 //      * @private
 //      */
 //     _processAsPolyline:function() {
-//         for (var j = 0, ll = this._vertexArray.length; j < ll - 1; j += 1) {
-//             var s = this._vertexArray[j];
-//             var e = this._vertexArray[j + 1];
-//             var edge = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
+//         for (let j = 0, ll = this._vertexArray.length; j < ll - 1; j += 1) {
+//             let s = this._vertexArray[j];
+//             let e = this._vertexArray[j + 1];
+//             let edge = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.Edge);
 //             edge.init(s, e, this.__index * 1000 + j + 1, ssr.LoS.Constant.EDGE_TYPE.POLYLINE);
 //             this.addObstacleEdge(edge);
 //         }
@@ -901,14 +907,14 @@ ssr.LoS.Data.Obstacle.resetIndex = function() {
 //      */
 //     addEndPointAnglePoint:function(hashCode, point, edge, prevEdge, nextEdge) {
 //         if (!this.hasAnglePoint(hashCode)) {
-//             var edgeIDs = [];
+//             let edgeIDs = [];
 //             if (prevEdge) {
 //                 edgeIDs.push(prevEdge.getEdgeID());
 //             }
 //             if (nextEdge) {
 //                 edgeIDs.push(nextEdge.getEdgeID());
 //             }
-//             var anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+//             let anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
 //             anglePoint.init(point, edgeIDs, ssr.LoS.Constant.ANGLE_POINT_TYPE.ENDPOINT, prevEdge, nextEdge);
 //             this.addAnglePoint(hashCode, anglePoint);
 //         }
@@ -922,7 +928,7 @@ ssr.LoS.Data.Obstacle.resetIndex = function() {
 //      */
 //     addBoundaryAnglePoint:function(hashCode, point, edge) {
 //         if (!this.hasAnglePoint(hashCode)) {
-//             var anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
+//             let anglePoint = ssr.LoS.Data.Manager.getInstance().create(ssr.LoS.Data.AnglePoint);
 //             anglePoint.init(point, [edge.getEdgeID()], ssr.LoS.Constant.ANGLE_POINT_TYPE.BOUNDARY);
 //             this.addAnglePoint(hashCode, anglePoint);
 //         }

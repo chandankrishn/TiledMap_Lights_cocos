@@ -25,12 +25,12 @@
 
 // const ssr = require('../namespace/SSRLoSNamespace');
 import ssr from "../namespace/SSRLoSNamespace";
- 
+
 /**
  * Render util class
  * @class
  */
-ssr.LoS.Render.Util = function() {};
+ssr.LoS.Render.Util = function () { };
 
 /**
  * Render the visible area.
@@ -38,13 +38,12 @@ ssr.LoS.Render.Util = function() {};
  * @param {ssr.LoS.Component.Core} losComponentCore The ssr.LoS.Component.Core.
  * @param {cc.DrawNode} render The target to render in.
  */
-ssr.LoS.Render.Util.renderSightArea = function(losComponentCore, render, isIgnoreSourcePosition) {
-    console.trace("Hello render sight area");
+ssr.LoS.Render.Util.renderSightArea = (losComponentCore: any, render: any, isIgnoreSourcePosition: any) => {
     isIgnoreSourcePosition = isIgnoreSourcePosition == undefined ? false : isIgnoreSourcePosition;
-    var sightAreaArray = losComponentCore.getSightArea();
-    var sourcePosition = losComponentCore.getPosition();
-    for (var i = 0, l = sightAreaArray.length; i < l; i ++) {
-        var toDrawPoly = sightAreaArray[i].slice();
+    let sightAreaArray = losComponentCore.getSightArea();
+    let sourcePosition = losComponentCore.getPosition();
+    for (let i = 0, l = sightAreaArray.length; i < l; i++) {
+        let toDrawPoly = sightAreaArray[i].slice();
         if (losComponentCore.getMode() == ssr.LoS.Constant.MODE.UNLIMITED_RANGE) {
             toDrawPoly.push(sourcePosition);
         }
@@ -56,7 +55,7 @@ ssr.LoS.Render.Util.renderSightArea = function(losComponentCore, render, isIgnor
         else {
             toDrawPoly.push(sourcePosition);
         }
-        for (var j = 0, ll = toDrawPoly.length; j < ll; j ++) {
+        for (let j = 0, ll = toDrawPoly.length; j < ll; j++) {
             if (j == 0) {
                 if (isIgnoreSourcePosition) {
                     render.moveTo(toDrawPoly[j].x - sourcePosition.x, toDrawPoly[j].y - sourcePosition.y);
@@ -84,12 +83,12 @@ ssr.LoS.Render.Util.renderSightArea = function(losComponentCore, render, isIgnor
  * @param {ssr.LoS.Component.Core} losComponentCore The ssr.LoS.Component.Core.
  * @param {cc.DrawNode} render The target to render in.
  */
-ssr.LoS.Render.Util.renderSightVert = function(losComponentCore : any, render : any, isIgnoreSourcePosition : any) {
+ssr.LoS.Render.Util.renderSightVert = (losComponentCore: any, render: any, isIgnoreSourcePosition: any) => {
     isIgnoreSourcePosition = isIgnoreSourcePosition == undefined ? false : isIgnoreSourcePosition;
-    var sightAreaArray = losComponentCore.getSightArea();
-    var sourcePosition = losComponentCore.getPosition();
-    for (var i = 0, l = sightAreaArray.length; i < l; i ++) {
-        for (var j = 0; j < sightAreaArray[i].length; j ++) {
+    let sightAreaArray = losComponentCore.getSightArea();
+    let sourcePosition = losComponentCore.getPosition();
+    for (let i = 0, l = sightAreaArray.length; i < l; i++) {
+        for (let j = 0; j < sightAreaArray[i].length; j++) {
             if (isIgnoreSourcePosition) {
                 render.circle(sightAreaArray[i][j].x - sourcePosition.x, sightAreaArray[i][j].y - sourcePosition.y, 1);
             }
@@ -106,11 +105,11 @@ ssr.LoS.Render.Util.renderSightVert = function(losComponentCore : any, render : 
  * @param {ssr.LoS.Component.Core} losComponentCore The ssr.LoS.Component.Core.
  * @param {cc.DrawNode} render The target to render in.
  */
-ssr.LoS.Render.Util.renderBlockingEdge = function(losComponentCore, render, isIgnoreSourcePosition) {
+ssr.LoS.Render.Util.renderBlockingEdge = (losComponentCore: any, render: any, isIgnoreSourcePosition: any) => {
     isIgnoreSourcePosition = isIgnoreSourcePosition == undefined ? false : isIgnoreSourcePosition;
-    var blockingEdgeArray = losComponentCore.getBlockingEdgeArray();
-    var sourcePosition = losComponentCore.getPosition();
-    for (var i = 0, l = blockingEdgeArray.length; i < l; i ++) {
+    let blockingEdgeArray = losComponentCore.getBlockingEdgeArray();
+    let sourcePosition = losComponentCore.getPosition();
+    for (let i = 0, l = blockingEdgeArray.length; i < l; i++) {
         if (isIgnoreSourcePosition) {
             render.moveTo(blockingEdgeArray[i].getStartPoint().x - sourcePosition.x, blockingEdgeArray[i].getStartPoint().y - sourcePosition.y);
             render.lineTo(blockingEdgeArray[i].getEndPoint().x - sourcePosition.x, blockingEdgeArray[i].getEndPoint().y - sourcePosition.y);
@@ -128,11 +127,11 @@ ssr.LoS.Render.Util.renderBlockingEdge = function(losComponentCore, render, isIg
  * @param {ssr.LoS.Component.Core} losComponentCore The ssr.LoS.Component.Core.
  * @param {cc.DrawNode} render The target to render in.
  */
-ssr.LoS.Render.Util.renderPotentialBlockingEdge = function(losComponentCore, render, isIgnoreSourcePosition) {
+ssr.LoS.Render.Util.renderPotentialBlockingEdge = (losComponentCore: any, render: any, isIgnoreSourcePosition: any) => {
     isIgnoreSourcePosition = isIgnoreSourcePosition == undefined ? false : isIgnoreSourcePosition;
-    var potentialBlockingEdgeArray = losComponentCore.getPotentialBlockingEdgeArray();
-    var sourcePosition = losComponentCore.getPosition();
-    for (var i = 0, l = potentialBlockingEdgeArray.length; i < l; i ++) {
+    let potentialBlockingEdgeArray = losComponentCore.getPotentialBlockingEdgeArray();
+    let sourcePosition = losComponentCore.getPosition();
+    for (let i = 0, l = potentialBlockingEdgeArray.length; i < l; i++) {
         if (isIgnoreSourcePosition) {
             render.moveTo(potentialBlockingEdgeArray[i].getStartPoint().x - sourcePosition.x, potentialBlockingEdgeArray[i].getStartPoint().y - sourcePosition.y);
             render.lineTo(potentialBlockingEdgeArray[i].getEndPoint().x - sourcePosition.x, potentialBlockingEdgeArray[i].getEndPoint().y - sourcePosition.y);
@@ -150,11 +149,11 @@ ssr.LoS.Render.Util.renderPotentialBlockingEdge = function(losComponentCore, ren
  * @param {ssr.LoS.Component.Core} losComponentCore The ssr.LoS.Component.Core.
  * @param {cc.DrawNode} render The target to render in.
  */
-ssr.LoS.Render.Util.renderVisibleEdge = function(losComponentCore, render, isIgnoreSourcePosition) {
+ssr.LoS.Render.Util.renderVisibleEdge = (losComponentCore, render, isIgnoreSourcePosition) => {
     isIgnoreSourcePosition = isIgnoreSourcePosition == undefined ? false : isIgnoreSourcePosition;
-    var visibleEdgeArray = losComponentCore.getVisibleEdgeArray();
-    var sourcePosition = losComponentCore.getPosition();
-    for (var i = 0, l = visibleEdgeArray.length; i < l; i ++) {
+    let visibleEdgeArray = losComponentCore.getVisibleEdgeArray();
+    let sourcePosition = losComponentCore.getPosition();
+    for (let i = 0, l = visibleEdgeArray.length; i < l; i++) {
         if (isIgnoreSourcePosition) {
             render.moveTo(visibleEdgeArray[i][0].x - sourcePosition.x, visibleEdgeArray[i][0].y - sourcePosition.y);
             render.lineTo(visibleEdgeArray[i][1].x - sourcePosition.x, visibleEdgeArray[i][1].y - sourcePosition.y);
@@ -172,12 +171,12 @@ ssr.LoS.Render.Util.renderVisibleEdge = function(losComponentCore, render, isIgn
  * @param {ssr.LoS.Component.Core} losComponentCore The ssr.LoS.Component.Core.
  * @param {cc.DrawNode} render The target to render in.
  */
-ssr.LoS.Render.Util.renderHitPoint = function(losComponentCore, render, isIgnoreSourcePosition) {
+ssr.LoS.Render.Util.renderHitPoint = function (losComponentCore, render, isIgnoreSourcePosition) {
     isIgnoreSourcePosition = isIgnoreSourcePosition == undefined ? false : isIgnoreSourcePosition;
-    var hitPointArray = losComponentCore.getHitPointArray();
-    var sourcePosition = losComponentCore.getPosition();
-    for (var i = 0, l = hitPointArray.length; i < l; i ++) {
-        var hitPoint = hitPointArray[i].getHitPoint();
+    let hitPointArray = losComponentCore.getHitPointArray();
+    let sourcePosition = losComponentCore.getPosition();
+    for (let i = 0, l = hitPointArray.length; i < l; i++) {
+        let hitPoint = hitPointArray[i].getHitPoint();
         if (isIgnoreSourcePosition) {
             render.circle(hitPoint.x - sourcePosition.x, hitPoint.y - sourcePosition.y, 1);
         }
@@ -193,12 +192,12 @@ ssr.LoS.Render.Util.renderHitPoint = function(losComponentCore, render, isIgnore
  * @param {ssr.LoS.Component.Core} losComponentCore The ssr.LoS.Component.Core.
  * @param {cc.DrawNode} render The target to render in.
  */
-ssr.LoS.Render.Util.renderRay = function(losComponentCore, render, isIgnoreSourcePosition, node) {
+ssr.LoS.Render.Util.renderRay = function (losComponentCore, render, isIgnoreSourcePosition, node) {
     isIgnoreSourcePosition = isIgnoreSourcePosition == undefined ? false : isIgnoreSourcePosition;
-    var hitPointArray = losComponentCore.getHitPointArray();
-    var sourcePosition = node.getPosition();
-    for (var i = 0, l = hitPointArray.length; i < l; i ++) {
-        var hitPoint = hitPointArray[i].getHitPoint();
+    let hitPointArray = losComponentCore.getHitPointArray();
+    let sourcePosition = node.getPosition();
+    for (let i = 0, l = hitPointArray.length; i < l; i++) {
+        let hitPoint = hitPointArray[i].getHitPoint();
         if (isIgnoreSourcePosition) {
             render.moveTo(0, 0);
             render.lineTo(hitPoint.x - sourcePosition.x, hitPoint.y - sourcePosition.y);
@@ -217,12 +216,12 @@ ssr.LoS.Render.Util.renderRay = function(losComponentCore, render, isIgnoreSourc
  * @param {ssr.LoS.Component.Core} losComponentCore The ssr.LoS.Component.Core.
  * @param {cc.DrawNode} render The target to render in.
  */
-ssr.LoS.Render.Util.renderSightRange = function(losComponentCore, render, isIgnoreSourcePosition) { 
+ssr.LoS.Render.Util.renderSightRange = function (losComponentCore, render, isIgnoreSourcePosition) {
     if (losComponentCore.getMode() == ssr.LoS.Constant.MODE.UNLIMITED_RANGE) {
         return;
     }
     isIgnoreSourcePosition = isIgnoreSourcePosition == undefined ? false : isIgnoreSourcePosition;
-    var sourcePosition = losComponentCore.getPosition();
+    let sourcePosition = losComponentCore.getPosition();
     if (isIgnoreSourcePosition) {
         render.circle(0, 0, losComponentCore.getRadius());
     }

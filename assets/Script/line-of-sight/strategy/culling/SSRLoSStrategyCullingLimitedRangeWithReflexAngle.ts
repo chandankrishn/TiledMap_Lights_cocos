@@ -41,7 +41,7 @@ THE SOFTWARE.
 * @param {ssr.LoS.Data.Edge|null} nextEdgeE The start point of the edge connected to the end point of the edge being processed.
 */
 import { _decorator } from 'cc';
-import  ssr  from '../../namespace/SSRLoSNamespace';
+import ssr from '../../namespace/SSRLoSNamespace';
 import { ssrLoSStrategyCullingLimitedRangeWithNonFullAngle } from './SSRLoSStrategyCullingLimitedRangeWithNonFullAngle';
 const { ccclass, property } = _decorator;
 
@@ -50,97 +50,97 @@ export class ssrLoSStrategyCullingLimitedRangeWithReflexAngle extends ssrLoSStra
     // @property
     // public "extends" = 'CullingLimitedRangeWithNonFullAngle';
 
-    _processOneEdge (obstacle: any, sHashCode: any, eHashCode: any, edge: any, prevEdgeS: any, nextEdgeS: any, prevEdgeE: any, nextEdgeE: any) {
-            var startPoint = edge.getStartPoint(); 
-            var endPoint = edge.getEndPoint(); 
-            var sightBoundary = this._losComponentCore.getSightBoundary(); 
-            var center = sightBoundary.getCenter(); 
-            var radius = sightBoundary.getRadius(); 
-            var edges = sightBoundary.getEdges(); 
-            var edgeRectIntersectionResult = ssr.LoS.Helper.segmentCircleIntersectionTest(startPoint, endPoint, center, radius); 
-            if (edgeRectIntersectionResult) { 
-                var sInclusionTestResult = ssr.LoS.Helper.pointReflexSectorInclusionTest(startPoint, sightBoundary); 
-                var eInclusionTestResult = ssr.LoS.Helper.pointReflexSectorInclusionTest(endPoint, sightBoundary); 
-                if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND &&  
-                    eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND) { 
-                } 
-                else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT &&  
-                         eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT) { 
-                    var intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary); 
-                    if (intersections.length > 0) { 
-                        obstacle.addPotentialBlockingEdge(edge); 
-                        for (var k = 0; k < intersections.length; k ++) { 
-                            var intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]); 
-                            obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge); 
-                        } 
-                    } 
-                    else { 
-                    } 
-                } 
-                else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN &&  
-                         eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN) { 
-                    obstacle.addEndPointAnglePoint(sHashCode, startPoint, edge, prevEdgeS, nextEdgeS); 
-                    obstacle.addEndPointAnglePoint(eHashCode, endPoint, edge, prevEdgeE, nextEdgeE); 
-                    obstacle.addPotentialBlockingEdge(edge); 
-                } 
-                else if ((sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND &&  
-                          eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT) || 
-                         (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT &&  
-                          eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND)) { 
-                    var sectorSEdgeInteresectResult = ssr.LoS.Helper.segmentSegmentTest(startPoint, endPoint, center, edges[0]); 
-                    var sectorEEdgeInteresectResult = ssr.LoS.Helper.segmentSegmentTest(startPoint, endPoint, center, edges[1]); 
-                    if (!sectorSEdgeInteresectResult && !sectorEEdgeInteresectResult) { 
-                    } 
-                    else { 
-                        var intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary); 
-                        if (intersections.length > 0) { 
-                            obstacle.addPotentialBlockingEdge(edge); 
-                            for (var k = 0; k < intersections.length; k ++) { 
-                                var intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]); 
-                                obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge); 
-                            } 
-                        } 
-                        else { 
-                        } 
-                    } 
-                } 
-                else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND &&  
-                         eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN) { 
-                    obstacle.addEndPointAnglePoint(eHashCode, endPoint, edge, prevEdgeE, nextEdgeE); 
-                    obstacle.addPotentialBlockingEdge(edge); 
-                } 
-                else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN &&  
-                         eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND) { 
-                    obstacle.addEndPointAnglePoint(sHashCode, startPoint, edge, prevEdgeS, nextEdgeS); 
-                    obstacle.addPotentialBlockingEdge(edge); 
-                } 
-                else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT &&  
-                         eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN) { 
-                    obstacle.addEndPointAnglePoint(eHashCode, endPoint, edge, prevEdgeE, nextEdgeE); 
-                    obstacle.addPotentialBlockingEdge(edge); 
-                    var intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary); 
-                    if (intersections.length > 0) { 
-                        obstacle.addPotentialBlockingEdge(edge); 
-                        for (var k = 0; k < intersections.length; k ++) { 
-                            var intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]); 
-                            obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge); 
-                        } 
-                    } 
-                } 
-                else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN &&  
-                         eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT) { 
-                    obstacle.addEndPointAnglePoint(sHashCode, startPoint, edge, prevEdgeS, nextEdgeS); 
-                    obstacle.addPotentialBlockingEdge(edge); 
-                    var intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary); 
-                    if (intersections.length > 0) { 
-                        obstacle.addPotentialBlockingEdge(edge); 
-                        for (var k = 0; k < intersections.length; k ++) { 
-                            var intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]); 
-                            obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge); 
-                        } 
-                    } 
-                } 
-            } 
+    _processOneEdge(obstacle: any, sHashCode: any, eHashCode: any, edge: any, prevEdgeS: any, nextEdgeS: any, prevEdgeE: any, nextEdgeE: any) {
+        let startPoint = edge.getStartPoint();
+        let endPoint = edge.getEndPoint();
+        let sightBoundary = this._losComponentCore.getSightBoundary();
+        let center = sightBoundary.getCenter();
+        let radius = sightBoundary.getRadius();
+        let edges = sightBoundary.getEdges();
+        let edgeRectIntersectionResult = ssr.LoS.Helper.segmentCircleIntersectionTest(startPoint, endPoint, center, radius);
+        if (edgeRectIntersectionResult) {
+            let sInclusionTestResult = ssr.LoS.Helper.pointReflexSectorInclusionTest(startPoint, sightBoundary);
+            let eInclusionTestResult = ssr.LoS.Helper.pointReflexSectorInclusionTest(endPoint, sightBoundary);
+            if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND &&
+                eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND) {
+            }
+            else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT &&
+                eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT) {
+                let intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
+                if (intersections.length > 0) {
+                    obstacle.addPotentialBlockingEdge(edge);
+                    for (let k = 0; k < intersections.length; k++) {
+                        let intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
+                        obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge);
+                    }
+                }
+                else {
+                }
+            }
+            else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN &&
+                eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN) {
+                obstacle.addEndPointAnglePoint(sHashCode, startPoint, edge, prevEdgeS, nextEdgeS);
+                obstacle.addEndPointAnglePoint(eHashCode, endPoint, edge, prevEdgeE, nextEdgeE);
+                obstacle.addPotentialBlockingEdge(edge);
+            }
+            else if ((sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND &&
+                eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT) ||
+                (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT &&
+                    eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND)) {
+                let sectorSEdgeInteresectResult = ssr.LoS.Helper.segmentSegmentTest(startPoint, endPoint, center, edges[0]);
+                let sectorEEdgeInteresectResult = ssr.LoS.Helper.segmentSegmentTest(startPoint, endPoint, center, edges[1]);
+                if (!sectorSEdgeInteresectResult && !sectorEEdgeInteresectResult) {
+                }
+                else {
+                    let intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
+                    if (intersections.length > 0) {
+                        obstacle.addPotentialBlockingEdge(edge);
+                        for (let k = 0; k < intersections.length; k++) {
+                            let intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
+                            obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge);
+                        }
+                    }
+                    else {
+                    }
+                }
+            }
+            else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND &&
+                eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN) {
+                obstacle.addEndPointAnglePoint(eHashCode, endPoint, edge, prevEdgeE, nextEdgeE);
+                obstacle.addPotentialBlockingEdge(edge);
+            }
+            else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN &&
+                eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND) {
+                obstacle.addEndPointAnglePoint(sHashCode, startPoint, edge, prevEdgeS, nextEdgeS);
+                obstacle.addPotentialBlockingEdge(edge);
+            }
+            else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT &&
+                eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN) {
+                obstacle.addEndPointAnglePoint(eHashCode, endPoint, edge, prevEdgeE, nextEdgeE);
+                obstacle.addPotentialBlockingEdge(edge);
+                let intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
+                if (intersections.length > 0) {
+                    obstacle.addPotentialBlockingEdge(edge);
+                    for (let k = 0; k < intersections.length; k++) {
+                        let intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
+                        obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge);
+                    }
+                }
+            }
+            else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.IN &&
+                eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT) {
+                obstacle.addEndPointAnglePoint(sHashCode, startPoint, edge, prevEdgeS, nextEdgeS);
+                obstacle.addPotentialBlockingEdge(edge);
+                let intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
+                if (intersections.length > 0) {
+                    obstacle.addPotentialBlockingEdge(edge);
+                    for (let k = 0; k < intersections.length; k++) {
+                        let intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
+                        obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge);
+                    }
+                }
+            }
+        }
     }
 
 }
@@ -200,17 +200,17 @@ ssr.LoS.Strategy.Culling.LimitedRangeWithReflexAngle = ssrLoSStrategyCullingLimi
 //      * @param {ssr.LoS.Data.Edge|null} nextEdgeE The start point of the edge connected to the end point of the edge being processed.
 //      */
 //     _processOneEdge:function(obstacle, sHashCode, eHashCode, edge, prevEdgeS, nextEdgeS, prevEdgeE, nextEdgeE) {
-//         var startPoint = edge.getStartPoint();
-//         var endPoint = edge.getEndPoint();
-//         var sightBoundary = this._losComponentCore.getSightBoundary();
-//         var center = sightBoundary.getCenter();
-//         var radius = sightBoundary.getRadius();
-//         var edges = sightBoundary.getEdges();
+//         let startPoint = edge.getStartPoint();
+//         let endPoint = edge.getEndPoint();
+//         let sightBoundary = this._losComponentCore.getSightBoundary();
+//         let center = sightBoundary.getCenter();
+//         let radius = sightBoundary.getRadius();
+//         let edges = sightBoundary.getEdges();
 // 
-//         var edgeRectIntersectionResult = ssr.LoS.Helper.segmentCircleIntersectionTest(startPoint, endPoint, center, radius);
+//         let edgeRectIntersectionResult = ssr.LoS.Helper.segmentCircleIntersectionTest(startPoint, endPoint, center, radius);
 //         if (edgeRectIntersectionResult) {
-//             var sInclusionTestResult = ssr.LoS.Helper.pointReflexSectorInclusionTest(startPoint, sightBoundary);
-//             var eInclusionTestResult = ssr.LoS.Helper.pointReflexSectorInclusionTest(endPoint, sightBoundary);
+//             let sInclusionTestResult = ssr.LoS.Helper.pointReflexSectorInclusionTest(startPoint, sightBoundary);
+//             let eInclusionTestResult = ssr.LoS.Helper.pointReflexSectorInclusionTest(endPoint, sightBoundary);
 //             if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND && 
 //                 eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND) {
 //                 // [1]
@@ -218,12 +218,12 @@ ssr.LoS.Strategy.Culling.LimitedRangeWithReflexAngle = ssrLoSStrategyCullingLimi
 //             else if (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT && 
 //                      eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT) {
 //                 // [2]
-//                 var intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
+//                 let intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
 //                 if (intersections.length > 0) {
 //                     // [2.2, 2.3]
 //                     obstacle.addPotentialBlockingEdge(edge);
-//                     for (var k = 0; k < intersections.length; k ++) {
-//                         var intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
+//                     for (let k = 0; k < intersections.length; k ++) {
+//                         let intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
 //                         obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge);
 //                     }
 //                 }
@@ -243,19 +243,19 @@ ssr.LoS.Strategy.Culling.LimitedRangeWithReflexAngle = ssrLoSStrategyCullingLimi
 //                      (sInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.OUT && 
 //                       eInclusionTestResult === ssr.LoS.Constant.POINT_SECTOR_TEST.BEHIND)) {
 //                 // [4, 5]
-//                 var sectorSEdgeInteresectResult = ssr.LoS.Helper.segmentSegmentTest(startPoint, endPoint, center, edges[0]);
-//                 var sectorEEdgeInteresectResult = ssr.LoS.Helper.segmentSegmentTest(startPoint, endPoint, center, edges[1]);
+//                 let sectorSEdgeInteresectResult = ssr.LoS.Helper.segmentSegmentTest(startPoint, endPoint, center, edges[0]);
+//                 let sectorEEdgeInteresectResult = ssr.LoS.Helper.segmentSegmentTest(startPoint, endPoint, center, edges[1]);
 //                 if (!sectorSEdgeInteresectResult && !sectorEEdgeInteresectResult) {
 //                     // [4/5.4]
 //                 }
 //                 else {
 //                     // [4/5.1, 4/5.2, 4/5.3]
-//                     var intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
+//                     let intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
 //                     if (intersections.length > 0) {
 //                         // [4/5.2, 4/5.3]
 //                         obstacle.addPotentialBlockingEdge(edge);
-//                         for (var k = 0; k < intersections.length; k ++) {
-//                             var intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
+//                         for (let k = 0; k < intersections.length; k ++) {
+//                             let intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
 //                             obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge);
 //                         }
 //                     }
@@ -282,11 +282,11 @@ ssr.LoS.Strategy.Culling.LimitedRangeWithReflexAngle = ssrLoSStrategyCullingLimi
 //                 obstacle.addEndPointAnglePoint(eHashCode, endPoint, edge, prevEdgeE, nextEdgeE);
 //                 obstacle.addPotentialBlockingEdge(edge);
 //                 //
-//                 var intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
+//                 let intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
 //                 if (intersections.length > 0) {
 //                     obstacle.addPotentialBlockingEdge(edge);
-//                     for (var k = 0; k < intersections.length; k ++) {
-//                         var intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
+//                     for (let k = 0; k < intersections.length; k ++) {
+//                         let intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
 //                         obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge);
 //                     }
 //                 }
@@ -297,11 +297,11 @@ ssr.LoS.Strategy.Culling.LimitedRangeWithReflexAngle = ssrLoSStrategyCullingLimi
 //                 obstacle.addEndPointAnglePoint(sHashCode, startPoint, edge, prevEdgeS, nextEdgeS);
 //                 obstacle.addPotentialBlockingEdge(edge);
 //                 //
-//                 var intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
+//                 let intersections = ssr.LoS.Helper.segmentReflexSectorIntersect(startPoint, endPoint, sightBoundary);
 //                 if (intersections.length > 0) {
 //                     obstacle.addPotentialBlockingEdge(edge);
-//                     for (var k = 0; k < intersections.length; k ++) {
-//                         var intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
+//                     for (let k = 0; k < intersections.length; k ++) {
+//                         let intersectionHashCode = ssr.LoS.Helper.pointToHashCode(intersections[k]);
 //                         obstacle.addBoundaryAnglePoint(intersectionHashCode, intersections[k], edge);
 //                     }
 //                 }

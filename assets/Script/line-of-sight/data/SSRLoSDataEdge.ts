@@ -73,52 +73,53 @@ THE SOFTWARE.
 * @function
 * @return {cc.Point} The edge edge vector.
 */
-import { Vec2, _decorator } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
+import { Vec2, Vec3, _decorator } from 'cc';
+import ssr from '../namespace/SSRLoSNamespace';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSDataEdge')
 export class ssrLoSDataEdge {
-    _startPoint: any;
-    _endPoint: any;
-    _edgeID: any;
-    _type: any;
-    _edgeVector: any;
+        _startPoint: any;
+        _endPoint: any;
+        _edgeID: any;
+        _type: any;
+        _edgeVector: any;
 
-    constructor () {
-            if (ssr.LoS.Data.Edge.__alloc === undefined) { 
-                ssr.LoS.Data.Edge.__alloc = 0; 
-            } 
-            ssr.LoS.Data.Edge.__alloc += 1; 
-    }
+        constructor() {
+                if (ssr.LoS.Data.Edge.__alloc === undefined) {
+                        ssr.LoS.Data.Edge.__alloc = 0;
+                }
+                ssr.LoS.Data.Edge.__alloc += 1;
+        }
 
-    init (startPoint: Vec2, endPoint: Vec2, edgeID: any, type: any) {
-            this._startPoint = startPoint; 
-            this._endPoint = endPoint; 
-            this._edgeID = edgeID; 
-            this._type = type; 
-            this._edgeVector = endPoint.subtract(startPoint); 
-    }
+        init(startPoint: Vec3, endPoint: Vec3, edgeID: any, type: any) {
+                this._startPoint = startPoint;
+                this._endPoint = endPoint;
+                this._edgeID = edgeID;
+                this._type = type;
+                let point = new Vec3(endPoint.x, endPoint.y);
+                this._edgeVector = point.subtract(startPoint);
+        }
 
-    getStartPoint () {
-            return this._startPoint; 
-    }
+        getStartPoint() {
+                return this._startPoint;
+        }
 
-    getEndPoint () {
-            return this._endPoint; 
-    }
+        getEndPoint() {
+                return this._endPoint;
+        }
 
-    getEdgeID () {
-            return this._edgeID; 
-    }
+        getEdgeID() {
+                return this._edgeID;
+        }
 
-    getType () {
-            return this._type; 
-    }
+        getType() {
+                return this._type;
+        }
 
-    getEdgeVector () {
-            return this._edgeVector; 
-    }
+        getEdgeVector() {
+                return this._edgeVector;
+        }
 
 }
 ssr.LoS.Data.Edge = ssrLoSDataEdge;

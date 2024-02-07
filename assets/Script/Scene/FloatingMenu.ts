@@ -1,6 +1,6 @@
 
 import { _decorator, Button, Component, director, Label, Node, Rect, ScrollView, Toggle, view } from 'cc';
-import  ssr  from '../line-of-sight/namespace/SSRLoSNamespace';
+import ssr from '../line-of-sight/namespace/SSRLoSNamespace';
 import { LoSRenderLayer } from './LoSRenderLayer';
 const { ccclass, property } = _decorator;
 
@@ -9,12 +9,12 @@ export class FloatingMenu extends Component {
     @property(Node)
     public robot!: Node;
 
-   
+
 
     @property(Node)
-    public obstaclesGroup!: Node ;
+    public obstaclesGroup!: Node;
     @property
-    public lightsGroup!:Node;
+    public lightsGroup!: Node;
 
     @property(ScrollView)
     public floatingMenu!: ScrollView;
@@ -63,253 +63,252 @@ export class FloatingMenu extends Component {
     _isTransformationDirtyDetectionOn!: boolean;
     // floatingMenu: import("cc").Director;
 
-    start () {
-            this._obstacleCount = 10; 
-            this._lightsCount = 0; 
-            this.losRenderLayer = this.node.getComponent(LoSRenderLayer); 
-            this.performance = this.node.getComponent("Performance"); 
-            this.robotObject = this.robot.getComponent("Robot"); 
-            this.robotLoSComponent = this.robot.getComponent("SSRLoSComponentCore"); 
-            this.robotLoSCore = this.robotLoSComponent.getLoSCore(); 
-            this._initFloatingMenu(); 
-            this._initDebugDraw(); 
+    start() {
+        this._obstacleCount = 10;
+        this._lightsCount = 0;
+        this.losRenderLayer = this.node.getComponent(LoSRenderLayer);
+        this.performance = this.node.getComponent("Performance");
+        this.robotObject = this.robot.getComponent("Robot");
+        this.robotLoSComponent = this.robot.getComponent("SSRLoSComponentCore");
+        this.robotLoSCore = this.robotLoSComponent.getLoSCore();
+        this._initFloatingMenu();
+        this._initDebugDraw();
     }
 
-    _initFloatingMenu () {
-            // this.floatingMenu =  director.getScene()?.getChildByName("RenderRoot2D").getChildByName('FloatingMenu').getChildByName("scrollView").getComponent("ScrollView"); 
-            this._losMaskRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_rayRenderMenuPanelItem"); 
-            this._sightAreaRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_sightAreaRenderMenuPanelItem"); 
-            this._sightLightRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_sightLightRenderMenuPanelItem"); 
-            this._sightRangeRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_sightRangeRenderMenuPanelItem"); 
-            this._rayRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_rayRenderMenuPanelItem"); 
-            this._hitPointRenderMenuPanelItem  = this.floatingMenu.content.getChildByName("_hitPointRenderMenuPanelItem"); 
-            this._sightVertRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_sightVertRenderMenuPanelItem"); 
-            this._potentialBlockingEdgesRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_potentialBlockingEdgesRenderMenuPanelItem"); 
-            this._blockingEdgesRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_blockingEdgesRenderMenuPanelItem"); 
-            this._visibleEdgeRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_visibleEdgeRenderMenuPanelItem"); 
-            this._sightRangePlusMenuPanelItem = this.floatingMenu.content.getChildByName("_sightRangePlusMenuPanelItem"); 
-            this._sightRangeMinusMenuPanelItem = this.floatingMenu.content.getChildByName("_sightRangeMinusMenuPanelItem"); 
-            this._sightAnglePlusMenuPanelItem = this.floatingMenu.content.getChildByName("_sightAnglePlusMenuPanelItem"); 
-            this._sightAngleMinusMenuPanelItem = this.floatingMenu.content.getChildByName("_sightAngleMinusMenuPanelItem"); 
-            this._sightSizeMenuPanelItem = this.floatingMenu.content.getChildByName("_sightSizeMenuPanelItem"); 
-            this._sightRectMenuPanelItem = this.floatingMenu.content.getChildByName("_sightRectMenuPanelItem"); 
-            this._dirtyDetectionPanelItem = this.floatingMenu.content.getChildByName("_dirtyDetectionPanelItem"); 
-            this._randomObstaclesPanelItem = this.floatingMenu.content.getChildByName("_randomObstaclesPanelItem"); 
-            this._randomLightsPanelItem = this.floatingMenu.content.getChildByName("_randomLightsPanelItem"); 
-            this._autoRotationPanelItem = this.floatingMenu.content.getChildByName("_autoRotationPanelItem"); 
+    _initFloatingMenu() {
+        // this.floatingMenu =  director.getScene()?.getChildByName("RenderRoot2D").getChildByName('FloatingMenu').getChildByName("scrollView").getComponent("ScrollView"); 
+        this._losMaskRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_rayRenderMenuPanelItem");
+        this._sightAreaRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_sightAreaRenderMenuPanelItem");
+        this._sightLightRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_sightLightRenderMenuPanelItem");
+        this._sightRangeRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_sightRangeRenderMenuPanelItem");
+        this._rayRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_rayRenderMenuPanelItem");
+        this._hitPointRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_hitPointRenderMenuPanelItem");
+        this._sightVertRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_sightVertRenderMenuPanelItem");
+        this._potentialBlockingEdgesRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_potentialBlockingEdgesRenderMenuPanelItem");
+        this._blockingEdgesRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_blockingEdgesRenderMenuPanelItem");
+        this._visibleEdgeRenderMenuPanelItem = this.floatingMenu.content.getChildByName("_visibleEdgeRenderMenuPanelItem");
+        this._sightRangePlusMenuPanelItem = this.floatingMenu.content.getChildByName("_sightRangePlusMenuPanelItem");
+        this._sightRangeMinusMenuPanelItem = this.floatingMenu.content.getChildByName("_sightRangeMinusMenuPanelItem");
+        this._sightAnglePlusMenuPanelItem = this.floatingMenu.content.getChildByName("_sightAnglePlusMenuPanelItem");
+        this._sightAngleMinusMenuPanelItem = this.floatingMenu.content.getChildByName("_sightAngleMinusMenuPanelItem");
+        this._sightSizeMenuPanelItem = this.floatingMenu.content.getChildByName("_sightSizeMenuPanelItem");
+        this._sightRectMenuPanelItem = this.floatingMenu.content.getChildByName("_sightRectMenuPanelItem");
+        this._dirtyDetectionPanelItem = this.floatingMenu.content.getChildByName("_dirtyDetectionPanelItem");
+        this._randomObstaclesPanelItem = this.floatingMenu.content.getChildByName("_randomObstaclesPanelItem");
+        this._randomLightsPanelItem = this.floatingMenu.content.getChildByName("_randomLightsPanelItem");
+        this._autoRotationPanelItem = this.floatingMenu.content.getChildByName("_autoRotationPanelItem");
     }
 
-    _initDebugDraw () {
-    
-            this._sightRayDebugLabel = this._rayRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._sightRayDebugLabel.string = "(-)"; 
-            this._sightRayDebugLabel.node.color = this.losRenderLayer?._losComponentRenderRay.getRender().strokeColor; 
-            this._hitPointDebugLabel = this._hitPointRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            console.log(this._hitPointDebugLabel)
-            this._hitPointDebugLabel.string = "(-)"; 
-            this._hitPointDebugLabel.node.color = this.losRenderLayer?._losComponentRenderHitPoint.getRender().strokeColor;         
-            this._potentialBlockingEdgeDebugLabel = this._potentialBlockingEdgesRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._potentialBlockingEdgeDebugLabel.string = "(-)"; 
-            this._potentialBlockingEdgeDebugLabel.node.color = this.losRenderLayer?._losComponentRenderPotentialBlockingEdge.getRender().strokeColor; 
-            this._blockingEdgeDebugLabel = this._blockingEdgesRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._blockingEdgeDebugLabel.string = "(-)"; 
-            this._blockingEdgeDebugLabel.node.color = this.losRenderLayer?._losComponentRenderBlockingEdge.getRender().strokeColor; 
-            this._visibleEdgeDebugLabel = this._visibleEdgeRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._visibleEdgeDebugLabel.string = "(-)"; 
-            this._visibleEdgeDebugLabel.node.color = this.losRenderLayer._losComponentRenderVisibleEdge.getRender().strokeColor; 
-            this._sightVertDebugLabel = this._sightVertRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._sightVertDebugLabel.string = "(-)"; 
-            this._sightVertDebugLabel.node.color = this.losRenderLayer._losComponentRenderSightVert.getRender().strokeColor; 
-            this._sightRangeDebugLabel = this._sightRangePlusMenuPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._sightRangeDebugLabel.string = "(-)"; 
-            this._sightAngleDebugLabel = this._sightAnglePlusMenuPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._sightAngleDebugLabel.string = "(-)"; 
-            this._randomObstaclesDebugLabel = this._randomObstaclesPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._randomObstaclesDebugLabel.string = "(✖️ 10)"; 
-            this._randomLightsDebugLabel = this._randomLightsPanelItem?.getChildByName("debug")?.getComponent(Label); 
-            this._randomLightsDebugLabel.string = "(✖️ 0)"; 
+    _initDebugDraw() {
+
+        this._sightRayDebugLabel = this._rayRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._sightRayDebugLabel.string = "(-)";
+        this._sightRayDebugLabel.node.color = this.losRenderLayer?._losComponentRenderRay.getRender().strokeColor;
+        this._hitPointDebugLabel = this._hitPointRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._hitPointDebugLabel.string = "(-)";
+        this._hitPointDebugLabel.node.color = this.losRenderLayer?._losComponentRenderHitPoint.getRender().strokeColor;
+        this._potentialBlockingEdgeDebugLabel = this._potentialBlockingEdgesRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._potentialBlockingEdgeDebugLabel.string = "(-)";
+        this._potentialBlockingEdgeDebugLabel.node.color = this.losRenderLayer?._losComponentRenderPotentialBlockingEdge.getRender().strokeColor;
+        this._blockingEdgeDebugLabel = this._blockingEdgesRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._blockingEdgeDebugLabel.string = "(-)";
+        this._blockingEdgeDebugLabel.node.color = this.losRenderLayer?._losComponentRenderBlockingEdge.getRender().strokeColor;
+        this._visibleEdgeDebugLabel = this._visibleEdgeRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._visibleEdgeDebugLabel.string = "(-)";
+        this._visibleEdgeDebugLabel.node.color = this.losRenderLayer._losComponentRenderVisibleEdge.getRender().strokeColor;
+        this._sightVertDebugLabel = this._sightVertRenderMenuPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._sightVertDebugLabel.string = "(-)";
+        this._sightVertDebugLabel.node.color = this.losRenderLayer._losComponentRenderSightVert.getRender().strokeColor;
+        this._sightRangeDebugLabel = this._sightRangePlusMenuPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._sightRangeDebugLabel.string = "(-)";
+        this._sightAngleDebugLabel = this._sightAnglePlusMenuPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._sightAngleDebugLabel.string = "(-)";
+        this._randomObstaclesDebugLabel = this._randomObstaclesPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._randomObstaclesDebugLabel.string = "(✖️ 10)";
+        this._randomLightsDebugLabel = this._randomLightsPanelItem?.getChildByName("debug")?.getComponent(Label);
+        this._randomLightsDebugLabel.string = "(✖️ 0)";
     }
 
-    losMaskRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableLoSMask(); 
-            } 
-            else { 
-                this.enableLoSMask(); 
-            }   
+    losMaskRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableLoSMask();
+        }
+        else {
+            this.enableLoSMask();
+        }
     }
 
-    sightAreaRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableSightArea(); 
-            } 
-            else { 
-                this.enableSightArea(); 
-            }   
+    sightAreaRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableSightArea();
+        }
+        else {
+            this.enableSightArea();
+        }
     }
 
-    sightLightRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableSightLight(); 
-            } 
-            else { 
-                this.enableSightLight(); 
-            }   
+    sightLightRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableSightLight();
+        }
+        else {
+            this.enableSightLight();
+        }
     }
 
-    sightRangeRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableSightRangeRender(); 
-            } 
-            else { 
-                this.enableSightRangeRender(); 
-            }   
+    sightRangeRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableSightRangeRender();
+        }
+        else {
+            this.enableSightRangeRender();
+        }
     }
 
-    rayRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableRayRender(); 
-            } 
-            else { 
-                this.enableRayRender(); 
-            } 
+    rayRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableRayRender();
+        }
+        else {
+            this.enableRayRender();
+        }
     }
 
-    hitPointRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableHitPointRender() 
-            } 
-            else { 
-                this.enableHitPointRender(); 
-            } 
+    hitPointRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableHitPointRender()
+        }
+        else {
+            this.enableHitPointRender();
+        }
     }
 
-    sightVertRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableSightVertRender() 
-            } 
-            else { 
-                this.enableSightVertRender(); 
-            } 
+    sightVertRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableSightVertRender()
+        }
+        else {
+            this.enableSightVertRender();
+        }
     }
 
-    potentialBlockingEdgesRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disablePotentialBlockingEdgesRender(); 
-            } 
-            else { 
-                this.enablePotentialBlockingEdgesRender();  
-            } 
+    potentialBlockingEdgesRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disablePotentialBlockingEdgesRender();
+        }
+        else {
+            this.enablePotentialBlockingEdgesRender();
+        }
     }
 
-    blockingEdgesRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableBlockingEdgesRender(); 
-            } 
-            else { 
-                this.enableBlockingEdgesRender()    
-            } 
+    blockingEdgesRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableBlockingEdgesRender();
+        }
+        else {
+            this.enableBlockingEdgesRender()
+        }
     }
 
-    visibleEdgeRenderMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableVisibleEdgesRender(); 
-            } 
-            else { 
-                this.enableVisibleEdgesRender(); 
-            } 
+    visibleEdgeRenderMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableVisibleEdgesRender();
+        }
+        else {
+            this.enableVisibleEdgesRender();
+        }
     }
 
-    sightRangeMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableSightRange(); 
-            } 
-            else { 
-                this.enableSightRange(); 
-            }   
+    sightRangeMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableSightRange();
+        }
+        else {
+            this.enableSightRange();
+        }
     }
 
-    sightRangePlusMenuCallback (sender: any, data: any) {
-            this.sightRangePlus(); 
+    sightRangePlusMenuCallback(sender: any, data: any) {
+        this.sightRangePlus();
     }
 
-    sightRangeMinusMenuCallback (sender: any, data: any) {
-            this.sightRangeMinus(); 
+    sightRangeMinusMenuCallback(sender: any, data: any) {
+        this.sightRangeMinus();
     }
 
-    endAnglePlusMenuCallback (sender: any, data: any) {
-            this.sightEndAnglePlus(); 
+    endAnglePlusMenuCallback(sender: any, data: any) {
+        this.sightEndAnglePlus();
     }
 
-    sightAnglePlusMenuCallback (sender: any, data: any) {
-            this.sightAnglePlus(); 
+    sightAnglePlusMenuCallback(sender: any, data: any) {
+        this.sightAnglePlus();
     }
 
-    sightAngleMinusMenuCallback (sender: any, data: any) {
-            this.sightAngleMinus(); 
+    sightAngleMinusMenuCallback(sender: any, data: any) {
+        this.sightAngleMinus();
     }
 
-    endAngleMinusMenuCallback (sender: any, data: any) {
-            this.sightEndAngleMinus(); 
+    endAngleMinusMenuCallback(sender: any, data: any) {
+        this.sightEndAngleMinus();
     }
 
-    dirtyDetectionMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableDirtyDetection(); 
-            } 
-            else { 
-                this.enableDirtyDetection(); 
-            }   
+    dirtyDetectionMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableDirtyDetection();
+        }
+        else {
+            this.enableDirtyDetection();
+        }
     }
 
-    sightRectMenuCallback (sender: any) {
-            this._sightSizeMenuPanelItem.getComponent(Toggle).isChecked = false; 
-            if (sender.isChecked == 0) { 
-                this.robotLoSCore.enableAutoGenerateBoundary(); 
-            } 
-            else { 
-                this.robotLoSCore.setSightRect(new Rect(-300, -300, 600, 600)); 
-            } 
+    sightRectMenuCallback(sender: any) {
+        this._sightSizeMenuPanelItem.getComponent(Toggle).isChecked = false;
+        if (sender.isChecked == 0) {
+            this.robotLoSCore.enableAutoGenerateBoundary();
+        }
+        else {
+            this.robotLoSCore.setSightRect(new Rect(-300, -300, 600, 600));
+        }
     }
 
-    sightSizeMenuCallback (sender: any) {
-            this._sightRectMenuPanelItem.getComponent(Toggle).isChecked = false; 
-            if (sender.isChecked == 0) { 
-                this.robotLoSCore.enableAutoGenerateBoundary(); 
-            } 
-            else { 
-                this.robotLoSCore.setSightSize(view.getVisibleSize().width / 2, view.getVisibleSize().height / 2); 
-            } 
+    sightSizeMenuCallback(sender: any) {
+        this._sightRectMenuPanelItem.getComponent(Toggle).isChecked = false;
+        if (sender.isChecked == 0) {
+            this.robotLoSCore.enableAutoGenerateBoundary();
+        }
+        else {
+            this.robotLoSCore.setSightSize(view.getVisibleSize().width / 2, view.getVisibleSize().height / 2);
+        }
     }
 
-    followMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableFollow(); 
-            } 
-            else { 
-                this.enableFollow(); 
-            }   
+    followMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableFollow();
+        }
+        else {
+            this.enableFollow();
+        }
     }
 
-    randomObstaclesMenuCallback (sender: any, data: any) {
-            this._obstacleCount += 10; 
-            this._randomObstaclesDebugLabel.string = "(✖️ " + this._obstacleCount + ")"; 
-            this.performance.randomObstacles(this._obstacleCount); 
+    randomObstaclesMenuCallback(sender: any, data: any) {
+        this._obstacleCount += 10;
+        this._randomObstaclesDebugLabel.string = "(✖️ " + this._obstacleCount + ")";
+        this.performance.randomObstacles(this._obstacleCount);
     }
 
-    randomLightsMenuCallback (sender: any, data: any) {
-            this._lightsCount += 2; 
-            this._randomLightsDebugLabel.string = "(✖️ " + this._lightsCount + ")"; 
-            this.performance.randomLights(this._lightsCount); 
+    randomLightsMenuCallback(sender: any, data: any) {
+        this._lightsCount += 2;
+        this._randomLightsDebugLabel.string = "(✖️ " + this._lightsCount + ")";
+        this.performance.randomLights(this._lightsCount);
     }
 
-    autoRotationMenuCallback (sender: any, data: any) {
-            if (sender.isChecked == 0) { 
-                this.disableAutoRotation(); 
-            } 
-            else { 
-                this.enableAutoRotation(); 
-            }   
+    autoRotationMenuCallback(sender: any, data: any) {
+        if (sender.isChecked == 0) {
+            this.disableAutoRotation();
+        }
+        else {
+            this.enableAutoRotation();
+        }
     }
 
 
@@ -404,15 +403,15 @@ export class FloatingMenu extends Component {
     }
     enableDirtyDetection() {
         if (this.robot) {
-            var obstacles = this.robotLoSCore.getObstacles();
-            for (var i = 0; i < obstacles.length; i ++) {
+            let obstacles = this.robotLoSCore.getObstacles();
+            for (let i = 0; i < obstacles.length; i++) {
                 obstacles[i].enableDirtyDetection();
             }
         }
-        var lights = this.lightsGroup.getChildren();
-        for (var i = 0; i < lights.length; i ++) {
-            var obstacles = lights[i].getComponent("SSRLoSComponentCore").getLoSCore().getObstacles();
-            for (var j = 0; j < obstacles.length; j ++) {
+        let lights = this.lightsGroup.getChildren();
+        for (let i = 0; i < lights.length; i++) {
+            let obstacles = lights[i].getComponent("SSRLoSComponentCore").getLoSCore().getObstacles();
+            for (let j = 0; j < obstacles.length; j++) {
                 obstacles[j].enableDirtyDetection();
             }
         }
@@ -420,15 +419,15 @@ export class FloatingMenu extends Component {
     }
     disableDirtyDetection() {
         if (this.robot) {
-            var obstacles = this.robotLoSCore.getObstacles();
-            for (var i = 0; i < obstacles.length; i ++) {
+            let obstacles = this.robotLoSCore.getObstacles();
+            for (let i = 0; i < obstacles.length; i++) {
                 obstacles[i].disableDirtyDetection();
             }
         }
-        var lights = this.lightsGroup.getChildren();
-        for (var i = 0; i < lights.length; i ++) {
-            var obstacles = lights[i].getComponent("SSRLoSComponentCore").getLoSCore().getObstacles();
-            for (var j = 0; j < obstacles.length; j ++) {
+        let lights = this.lightsGroup.getChildren();
+        for (let i = 0; i < lights.length; i++) {
+            let obstacles = lights[i].getComponent("SSRLoSComponentCore").getLoSCore().getObstacles();
+            for (let j = 0; j < obstacles.length; j++) {
                 obstacles[j].disableDirtyDetection();
             }
         }
@@ -465,7 +464,7 @@ export class FloatingMenu extends Component {
     }
     sightRangeMinus() {
         if (this.robot) {
-            var radius = this.robotLoSCore.getRadius();
+            let radius = this.robotLoSCore.getRadius();
             if (radius <= 0) {
                 return;
             }
@@ -476,7 +475,7 @@ export class FloatingMenu extends Component {
     }
     sightRangePlus() {
         if (this.robot) {
-            var radius = this.robotLoSCore.getRadius();
+            let radius = this.robotLoSCore.getRadius();
             this.robotLoSCore.setRadius(radius + 8);
         }
         this.robotObject.isForceLoSUpdate = true;
@@ -484,7 +483,7 @@ export class FloatingMenu extends Component {
     }
     sightAnglePlus() {
         if (this.robot) {
-            var angle = this.robotLoSCore.getCentralAngle();
+            let angle = this.robotLoSCore.getCentralAngle();
             this.robotLoSCore.setCentralAngle(angle + 2);
         }
         this.robotObject.isForceLoSUpdate = true;
@@ -492,7 +491,7 @@ export class FloatingMenu extends Component {
     }
     sightAngleMinus() {
         if (this.robot) {
-            var angle = this.robotLoSCore.getCentralAngle();
+            let angle = this.robotLoSCore.getCentralAngle();
             this.robotLoSCore.setCentralAngle(angle - 2);
         }
         this.robotObject.isForceLoSUpdate = true;
@@ -500,7 +499,7 @@ export class FloatingMenu extends Component {
     }
     sightEndAnglePlus() {
         if (this.robot) {
-            var endAngle = this.robotLoSCore.getEndAngle();
+            let endAngle = this.robotLoSCore.getEndAngle();
             this.robotLoSCore.setEndAngle(endAngle + 2);
         }
         this.robotObject.isForceLoSUpdate = true;
@@ -508,7 +507,7 @@ export class FloatingMenu extends Component {
     }
     sightEndAngleMinus() {
         if (this.robot) {
-            var endAngle = this.robotLoSCore.getEndAngle();
+            let endAngle = this.robotLoSCore.getEndAngle();
             this.robotLoSCore.setEndAngle(endAngle - 2);
         }
         this.robotObject.isForceLoSUpdate = true;
@@ -522,14 +521,14 @@ export class FloatingMenu extends Component {
         this.robotObject.isForceLoSUpdate = true;
     }
     disableAutoRotation() {
-        var obstaclesArray = this.obstaclesGroup.getChildren();
-        // for (var i = 0; i < obstaclesArray.length; i ++) {
+        let obstaclesArray = this.obstaclesGroup.getChildren();
+        // for (let i = 0; i < obstaclesArray.length; i ++) {
         //     obstaclesArray[i].stopAllActions();
         // }
     }
     enableAutoRotation() {
-        var obstaclesArray = this.obstaclesGroup.getChildren();
-        for (var i = 0; i < obstaclesArray.length; i ++) {
+        let obstaclesArray = this.obstaclesGroup.getChildren();
+        for (let i = 0; i < obstaclesArray.length; i++) {
             // obstaclesArray[i].runAction(
             //     cc.repeatForever(
             //         cc.rotateBy(10, 360)
@@ -539,22 +538,22 @@ export class FloatingMenu extends Component {
     }
     //
     updateDebugDraw() {
-        var rayCount = this.robotLoSCore.getRayCount();
+        let rayCount = this.robotLoSCore.getRayCount();
         this._sightRayDebugLabel.string = (" (" + rayCount + ")");
 
-        var hitPointCount = this.robotLoSCore.getHitPointCount();
+        let hitPointCount = this.robotLoSCore.getHitPointCount();
         this._hitPointDebugLabel.string = (" (" + hitPointCount + ")");
 
-        var sightVertCount = this.robotLoSCore.getSightAreaVertCount();
+        let sightVertCount = this.robotLoSCore.getSightAreaVertCount();
         this._sightVertDebugLabel.string = (" (" + sightVertCount + ")");
 
-        var potentialBlockingEdgeCount = this.robotLoSCore.getPotentialBlockingEdgeCount();
+        let potentialBlockingEdgeCount = this.robotLoSCore.getPotentialBlockingEdgeCount();
         this._potentialBlockingEdgeDebugLabel.string = (" (" + potentialBlockingEdgeCount + ")");
 
-        var blockingEdgeCount = this.robotLoSCore.getBlockingEdgeCount();
+        let blockingEdgeCount = this.robotLoSCore.getBlockingEdgeCount();
         this._blockingEdgeDebugLabel.string = (" (" + blockingEdgeCount + ")");
 
-        var visibleEdgeCount = this.robotLoSCore.getVisibleEdgeCount();
+        let visibleEdgeCount = this.robotLoSCore.getVisibleEdgeCount();
         this._visibleEdgeDebugLabel.string = (" (" + visibleEdgeCount + ")");
     }
 

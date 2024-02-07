@@ -32,14 +32,15 @@ THE SOFTWARE.
 * @function
 */
 import { _decorator } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
-import {  ssrLoSDataBoundary } from './SSRLoSDataBoundary';
+import ssr from '../namespace/SSRLoSNamespace';
+import { ssrLoSDataBoundary } from './SSRLoSDataBoundary';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSDataBoundaryNull')
 export class ssrLoSDataBoundaryNull extends ssrLoSDataBoundary {
-    constructor () {
-            this._type = ssr.LoS.Constant.BOUNDARY_TYPE.NULL; 
+    constructor() {
+        super();
+        this._type = ssr.LoS.Constant.BOUNDARY_TYPE.NULL;
     }
 
 }

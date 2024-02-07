@@ -101,72 +101,72 @@ THE SOFTWARE.
 * @param {Number} The angle to set.
 */
 import { _decorator } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
+import ssr from '../namespace/SSRLoSNamespace';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssr.LoS.Data.Ray')
 export class ssrLoSDataRay {
-    _endPoint: any;
-    _edgeIDs: any;
-    _type: any;
-    _angle: any;
-    _distanceSQ: any;
+        _endPoint: any;
+        _edgeIDs: any;
+        _type: any;
+        _angle: any;
+        _distanceSQ: any;
 
 
-    constructor () {
-            if (ssr.LoS.Data.Ray.__alloc === undefined) { 
-                ssr.LoS.Data.Ray.__alloc = 0; 
-            } 
-            ssr.LoS.Data.Ray.__alloc += 1; 
-    }
+        constructor() {
+                if (ssr.LoS.Data.Ray.__alloc === undefined) {
+                        ssr.LoS.Data.Ray.__alloc = 0;
+                }
+                ssr.LoS.Data.Ray.__alloc += 1;
+        }
 
-    init (endPoint: any, edgeIDs: any, type: any, angle: any, distanceSQ: any) {
-            this._endPoint = endPoint; 
-            this._edgeIDs = edgeIDs; 
-            this._type = type; 
-            this._angle = angle; 
-            this._distanceSQ = distanceSQ || -1; 
-    }
+        init(endPoint: any, edgeIDs: any, type: any, angle: any, distanceSQ: any) {
+                this._endPoint = endPoint;
+                this._edgeIDs = edgeIDs;
+                this._type = type;
+                this._angle = angle;
+                this._distanceSQ = distanceSQ || -1;
+        }
 
-    getEndPoint () {
-            return this._endPoint; 
-    }
+        getEndPoint() {
+                return this._endPoint;
+        }
 
-    setEndPoint (endPoint: any) {
-            this._endPoint = endPoint; 
-    }
+        setEndPoint(endPoint: any) {
+                this._endPoint = endPoint;
+        }
 
-    getEdgeIDs () {
-            return this._edgeIDs; 
-    }
+        getEdgeIDs() {
+                return this._edgeIDs;
+        }
 
-    setEdgeIDs (edgeIDs: any) {
-            this._edgeIDs = edgeIDs; 
-    }
+        setEdgeIDs(edgeIDs: any) {
+                this._edgeIDs = edgeIDs;
+        }
 
-    getType () {
-            return this._type; 
-    }
+        getType() {
+                return this._type;
+        }
 
-    setType (type: any) {
-            this._type = type; 
-    }
+        setType(type: any) {
+                this._type = type;
+        }
 
-    getDistanceSQ () {
-            return this._distanceSQ; 
-    }
+        getDistanceSQ() {
+                return this._distanceSQ;
+        }
 
-    setDistanceSQ (distanceSQ: any) {
-            this._distanceSQ = distanceSQ; 
-    }
+        setDistanceSQ(distanceSQ: any) {
+                this._distanceSQ = distanceSQ;
+        }
 
-    getAngle () {
-            return this._angle; 
-    }
+        getAngle() {
+                return this._angle;
+        }
 
-    setAngle (angle: any) {
-            this._angle = angle; 
-    }
+        setAngle(angle: any) {
+                this._angle = angle;
+        }
 
 }
 

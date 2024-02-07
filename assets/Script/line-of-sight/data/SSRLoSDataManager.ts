@@ -56,44 +56,44 @@ THE SOFTWARE.
 * @return {ssr.LoS.Data.Manager}
 */
 import { _decorator } from 'cc';
-import  ssr  from '../namespace/SSRLoSNamespace';
+import ssr from '../namespace/SSRLoSNamespace';
 const { ccclass, property } = _decorator;
 
 @ccclass('ssrLoSDataManager')
 export class ssrLoSDataManager {
     _isPoolEnabled!: boolean;
-   
 
-    constructor () {
-            this._isPoolEnabled = false; 
+
+    constructor() {
+        this._isPoolEnabled = false;
     }
 
-    enablePool () {
-            this._isPoolEnabled = true; 
+    enablePool() {
+        this._isPoolEnabled = true;
     }
 
-    disablePool () {
-            this._isPoolEnabled = false; 
+    disablePool() {
+        this._isPoolEnabled = false;
     }
 
-    create (cls: any) {
-            var instance = null; 
-            if (this._isPoolEnabled) { 
-                instance = ssr.LoS.Data.Pool.get(cls); 
-            } 
-            if (!instance) { 
-                instance = new cls(); 
-            } 
-            return instance; 
+    create(cls: any) {
+        let instance = null;
+        if (this._isPoolEnabled) {
+            instance = ssr.LoS.Data.Pool.get(cls);
+        }
+        if (!instance) {
+            instance = new cls();
+        }
+        return instance;
     }
 
-    free (obj: any) {
-            if (this._isPoolEnabled) { 
-                ssr.LoS.Data.Pool.put(obj); 
-            } 
-            else { 
-                obj = null; 
-            } 
+    free(obj: any) {
+        if (this._isPoolEnabled) {
+            ssr.LoS.Data.Pool.put(obj);
+        }
+        else {
+            obj = null;
+        }
     }
 
 }
@@ -174,7 +174,7 @@ ssr.LoS.Data.Manager.getInstance = function () {
 //      * @param {cc.Class} cls
 //      */
 //     create:function(cls) {
-//         var instance = null;
+//         let instance = null;
 //         if (this._isPoolEnabled) {
 //             instance = ssr.LoS.Data.Pool.get(cls);
 //         }
